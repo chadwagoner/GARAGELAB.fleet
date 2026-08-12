@@ -51,6 +51,14 @@
       export = "/volume1/backup";
       mountPoint = "/srv/backup";
       readOnly = false;
+
+      ensureDirectories = [
+        {
+          relativePath = config.networking.hostName;
+          user = "nix";
+          mode = "0775";
+        }
+      ];
     };
   };
 
