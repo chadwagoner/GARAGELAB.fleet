@@ -12,6 +12,7 @@
 
         modules = [
           ./modules/common.nix
+          ./modules/nfs.nix
           ./modules/ssh.nix
           ./modules/users.nix
           ./modules/auto-upgrade.nix
