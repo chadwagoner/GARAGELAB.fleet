@@ -13,9 +13,11 @@
         modules = [
           ./modules/common.nix
           ./modules/nfs.nix
+          ./modules/podman.nix
           ./modules/ssh.nix
           ./modules/users.nix
           ./modules/auto-upgrade.nix
+          ./services/group_cobra.nix
           ./hosts/cobra/configuration.nix
         ];
       };
