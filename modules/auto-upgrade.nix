@@ -10,6 +10,6 @@
     dates = "Sun 04:00";
     randomizedDelaySec = "30min";
 
-    allowReboot = false;
+    allowReboot = true;
   };
 }
