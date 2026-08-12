@@ -2,6 +2,8 @@
 
 {
   users.users.nix = {
+    uid = 1000;
+    group = "users";
     isNormalUser = true;
 
     extraGroups = [
