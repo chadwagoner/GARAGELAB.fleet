@@ -6,6 +6,21 @@
   "nix": {
     "enabled": true
   },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Update OCI images in NixOS service modules",
+      "managerFilePatterns": [
+        "/^services\\/.*\\.nix$/"
+      ],
+      "matchStrings": [
+        "(?<indentation>[ \\t]*)image\\s*=\\s*\"(?<depName>[^\"@\\s]+):(?<currentValue>[^\"@\\s]+)(?:@(?<currentDigest>sha256:[a-f0-9]+))?\";"
+      ],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker",
+      "autoReplaceStringTemplate": "{{{indentation}}}image = \"{{{depName}}}:{{{newValue}}}{{#if newDigest}}@{{{newDigest}}}{{/if}}\";"
+    }
+  ],
   "timezone": "America/Indiana/Indianapolis",
   "packageRules": [
     {
@@ -16,6 +31,20 @@
       "schedule": [
         "* 0-5 * * 6"
       ],
+      "automerge": false
+    },
+    {
+      "description": "Update OCI container images weekly",
+      "matchManagers": [
+        "custom.regex"
+      ],
+      "matchDatasources": [
+        "docker"
+      ],
+      "schedule": [
+        "* 0-5 * * 6"
+      ],
+      "pinDigests": true,
       "automerge": false
     }
   ]
