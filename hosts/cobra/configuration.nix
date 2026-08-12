@@ -44,6 +44,7 @@
       export = "/volume1/media";
       mountPoint = "/srv/media";
       readOnly = false;
+      idleTimeout = null;
     };
 
     backup = {

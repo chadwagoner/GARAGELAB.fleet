@@ -28,6 +28,15 @@ let
         description = "Mount the export read-only.";
       };
 
+      idleTimeout = lib.mkOption {
+        type = lib.types.nullOr lib.types.nonEmptyStr;
+        default = "10min";
+        description = ''
+          How long an inactive automounted export remains mounted. Set to null
+          to keep the export mounted after its first access.
+        '';
+      };
+
       extraOptions = lib.mkOption {
         type = lib.types.listOf lib.types.nonEmptyStr;
         default = [ ];
@@ -67,8 +76,8 @@ in
           "noatime"
           "noauto"
           "x-systemd.automount"
-          "x-systemd.idle-timeout=10min"
         ]
+        ++ lib.optional (mount.idleTimeout != null) "x-systemd.idle-timeout=${mount.idleTimeout}"
         ++ lib.optional mount.readOnly "ro"
         ++ mount.extraOptions;
       }
