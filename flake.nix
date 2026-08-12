@@ -14,6 +14,7 @@
           ./modules/common.nix
           ./modules/ssh.nix
           ./modules/users.nix
+          ./modules/auto-upgrade.nix
           ./hosts/cobra/configuration.nix
         ];
       };
