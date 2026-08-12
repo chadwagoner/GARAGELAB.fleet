@@ -33,20 +33,6 @@
   networking.nameservers = [ "192.168.128.1" ];
 
   # ------------------------------------------------------------
-  # AUTO UPGRADE
-  # ------------------------------------------------------------
-
-  # system.autoUpgrade = {
-  #   enable = true;
-  #   flake = "github:chadwagoner/GARAGELAB.fleet#cobra";
-
-  #   dates = "Sun 09:00";
-  #   randomizedDelaySec = "30min";
-
-  #   allowReboot = false;
-  # };
-
-  # ------------------------------------------------------------
   # NixOS compatibility
   # ------------------------------------------------------------
 
