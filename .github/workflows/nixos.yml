@@ -1,0 +1,104 @@
+name: NixOS CI
+
+on:
+  pull_request:
+  merge_group:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nixos-ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  discover-hosts:
+    name: Discover NixOS hosts
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    outputs:
+      hosts: ${{ steps.hosts.outputs.hosts }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@630ae543ea3a38a9a4166f03376c02c50f408342 # v31.11.0
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+
+      - name: Evaluate flake
+        run: nix flake check --no-build --show-trace
+
+      - name: Discover NixOS configurations
+        id: hosts
+        shell: bash
+        run: |
+          hosts="$(nix eval --json .#nixosConfigurations --apply builtins.attrNames)"
+
+          if [[ "$hosts" == "[]" ]]; then
+            echo "No nixosConfigurations were found in flake.nix" >&2
+            exit 1
+          fi
+
+          echo "hosts=$hosts" >> "$GITHUB_OUTPUT"
+
+  build-hosts:
+    name: Build NixOS host / ${{ matrix.host }}
+    needs: discover-hosts
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        host: ${{ fromJSON(needs.discover-hosts.outputs.hosts) }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@630ae543ea3a38a9a4166f03376c02c50f408342 # v31.11.0
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+
+      - name: Build ${{ matrix.host }}
+        run: >-
+          nix build
+          --no-link
+          --print-build-logs
+          --show-trace
+          ".#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel"
+
+  required:
+    name: NixOS configurations
+    if: always()
+    needs:
+      - discover-hosts
+      - build-hosts
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+
+    steps:
+      - name: Verify all host builds passed
+        env:
+          DISCOVERY_RESULT: ${{ needs.discover-hosts.result }}
+          BUILD_RESULT: ${{ needs.build-hosts.result }}
+        shell: bash
+        run: |
+          if [[ "$DISCOVERY_RESULT" != "success" || "$BUILD_RESULT" != "success" ]]; then
+            echo "Host discovery: $DISCOVERY_RESULT" >&2
+            echo "Host builds: $BUILD_RESULT" >&2
+            exit 1
+          fi
