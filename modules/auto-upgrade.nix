@@ -7,7 +7,7 @@
     flake =
       "github:chadwagoner/GARAGELAB.fleet#${config.networking.hostName}";
 
-    dates = "Sun 04:00";
+    dates = "Sun 09:00";
     randomizedDelaySec = "30min";
 
     allowReboot = true;
