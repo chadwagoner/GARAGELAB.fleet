@@ -8,13 +8,14 @@ FLAKE ?= .
 REMOTE_FLAKE ?= github:chadwagoner/GARAGELAB.fleet
 NIX ?= nix
 NIX_FLAGS ?= --extra-experimental-features "nix-command flakes"
+AGENIX_FLAKE ?= github:ryantm/agenix
 XDG_CACHE_HOME ?= /private/tmp/garagelab-fleet-nix-cache
 
 export XDG_CACHE_HOME
 
 .PHONY: help \
 	git-cleanup-preview git-cleanup git-pr-create \
-	nix-info nix-config-check nix-parse nix-show nix-eval nix-check nix-update \
+	nix-info nix-config-check nix-parse nix-show nix-eval nix-check nix-update agenix-edit \
 	remote-build remote-dry-activate remote-test remote-switch remote-status
 
 help: ## Show available targets.
@@ -62,6 +63,13 @@ nix-check: nix-parse ## Run flake checks without building Linux outputs.
 
 nix-update: ## Update flake inputs and flake.lock.
 	@$(NIX) $(NIX_FLAGS) flake update --flake "$(FLAKE)"
+
+agenix-edit: ## Edit an age secret (AGE_FILE=path/to/secret.age).
+	@if [ -z "$(AGE_FILE)" ]; then \
+		printf 'Usage: make agenix-edit AGE_FILE=path/to/secret.age\n' >&2; \
+		exit 2; \
+	fi
+	@$(NIX) $(NIX_FLAGS) run "$(AGENIX_FLAKE)" -- -e "$(AGE_FILE)"
 
 remote-build: ## Build the selected configuration on the NixOS host.
 	@ssh "$(REMOTE)" sudo nixos-rebuild build \
