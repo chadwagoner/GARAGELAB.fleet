@@ -6,7 +6,7 @@ in
 {
   age.secrets.pocket-id-encryption-key = {
     file = ../secrets/pocket-id-encryption-key.age;
-    owner = "root";
+    owner = "nix";
     group = "root";
     mode = "0400";
   };
