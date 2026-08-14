@@ -20,8 +20,8 @@
       networks = [ "proxy" ];
       volumes = [
         "/etc/localtime:/etc/localtime:ro"
-        "/var/run/docker.sock:/var/run/docker.sock:ro"
-        "/var/run/tailscale:/var/run/tailscale"
+        "/run/docker.sock:/var/run/docker.sock:ro"
+        "/run/tailscale:/var/run/tailscale"
       ];
     };
 
