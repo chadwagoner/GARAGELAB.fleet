@@ -69,7 +69,7 @@ agenix-edit: ## Edit an age secret (AGE_FILE=path/to/secret.age).
 		printf 'Usage: make agenix-edit AGE_FILE=path/to/secret.age\n' >&2; \
 		exit 2; \
 	fi
-	@$(NIX) $(NIX_FLAGS) run "$(AGENIX_FLAKE)" -- -e "$(AGE_FILE)"
+	@cd ./secrets && $(NIX) $(NIX_FLAGS) run "$(AGENIX_FLAKE)" -- -e "$(AGE_FILE)"
 
 remote-build: ## Build the selected configuration on the NixOS host.
 	@ssh "$(REMOTE)" sudo nixos-rebuild build \
