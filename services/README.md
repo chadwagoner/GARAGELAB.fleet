@@ -40,3 +40,19 @@ the declarative image used at the next NixOS switch.
   privileged ports, or similar access.
 - Review image release notes and let the NixOS CI build pass before merging a
   Renovate PR. Container image updates are intentionally not automerged.
+
+## Pocket ID
+
+Pocket ID is exposed by Docktail at
+`https://id.${config.fleet.tailscale.magicDnsSuffix}`. The host configuration
+must set `fleet.tailscale.magicDnsSuffix` to its `*.ts.net` MagicDNS suffix.
+
+Its Agenix secret contains only the raw encryption key, without a trailing
+newline. Generate a new installation's key with:
+
+```console
+openssl rand -base64 32 | tr -d '\n'
+```
+
+Do not replace this key after Pocket ID contains data without following Pocket
+ID's encryption-key rotation procedure.

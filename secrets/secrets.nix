@@ -8,6 +8,11 @@ in {
     cobra
   ];
 
+  "pocket-id-encryption-key.age".publicKeys = [
+    admin
+    cobra
+  ];
+
   "tailscale-oauth.age".publicKeys = [
     admin
     cobra

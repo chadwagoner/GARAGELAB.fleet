@@ -40,6 +40,7 @@
   # ------------------------------------------------------------
   fleet.tailscale = {
     ssh = true;
+    magicDnsSuffix = "unicorn-stargazer.ts.net";
     advertiseRoutes = [ "192.168.128.0/24" ];
     advertiseExitNode = true;
   };

@@ -14,6 +14,12 @@ in
   options.fleet.tailscale = {
     ssh = lib.mkEnableOption "Tailscale SSH";
 
+    magicDnsSuffix = lib.mkOption {
+      type = lib.types.strMatching "^[a-z0-9-]+[.]ts[.]net$";
+      example = "example-tailnet.ts.net";
+      description = "Tailscale MagicDNS suffix used to form service URLs.";
+    };
+
     advertiseRoutes = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       default = [ ];

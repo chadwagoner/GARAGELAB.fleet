@@ -6,5 +6,6 @@
     ./service_adguard.nix
     ./service_docktail.nix
     ./service_plex.nix
+    ./service_pocket-id.nix
   ];
 }
