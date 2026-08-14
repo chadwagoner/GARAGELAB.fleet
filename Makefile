@@ -89,3 +89,6 @@ remote-switch: ## Build and persistently activate the configuration on the NixOS
 
 remote-status: ## Show failed systemd units and recent boot errors on the NixOS host.
 	@ssh "$(REMOTE)" 'systemctl --failed; journalctl -b -p err..alert --no-pager -n 50'
+
+remote-reboot: ## Reboot the NixOS host.
+	@ssh "$(REMOTE)" sudo shutdown -r now
