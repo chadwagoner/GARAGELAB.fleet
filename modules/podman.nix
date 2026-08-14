@@ -22,6 +22,8 @@ in
 
   virtualisation.oci-containers.backend = "podman";
 
+  virtualisation.containers.containersConf.settings.network.dns_bind_port = 1153;
+
   systemd.services = {
     podman-network-proxy = {
       description = "Create the proxy Podman network";
