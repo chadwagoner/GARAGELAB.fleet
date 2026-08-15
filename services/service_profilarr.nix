@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ config, lib, ... }:
 
 {
   virtualisation.oci-containers.containers.profilarr = {
@@ -6,6 +6,7 @@
     environment = {
       PGID = "100";
       PUID = "1000";
+      ORIGIN = "https://profilarr.${config.fleet.tailscale.magicDnsSuffix}";
     };
     labels = {
       "docktail.service.enable" = "true";
