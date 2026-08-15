@@ -1,5 +1,9 @@
 # GARAGELAB.fleet
 
+Step-by-step host bootstrap, secret rotation, and service runbooks are in
+[`docs/`](docs/README.md). Start with the
+[Cobra bootstrap guide](docs/cobra-bootstrap.md).
+
 ## Commands
 
 Run `make` to list the available repository tasks. Common workflows include:
@@ -64,5 +68,6 @@ sudo nixos-rebuild switch --rollback
 ## Containers
 
 Podman is the OCI runtime. Add each declarative container as a NixOS module in
-[`services/`](services/README.md); Renovate checks those image references for
-weekly tag and digest updates.
+[`services/`](services/), following the
+[container service standards](docs/services/README.md). Renovate checks those
+image references for weekly tag and digest updates.

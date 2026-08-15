@@ -1,12 +1,18 @@
 # Container services
 
-Declare each Podman workload in its own NixOS module in this directory, then
-add that module to the appropriate `group_<host>.nix`. Keeping the import
-explicit makes the deployment change visible in review.
+Declare each Podman workload in its own NixOS module in the repository's
+[`services/`](../../services/) directory, then add that module to the
+appropriate `group_<host>.nix`. Keeping the import explicit makes the
+deployment change visible in review.
 
 Use the NixOS `virtualisation.oci-containers.containers` module rather than a
-separate Compose file. NixOS will create a `podman-<name>.service` systemd unit,
-send logs to journald, and start the container at boot by default.
+separate Compose file. NixOS creates a `podman-<name>.service` systemd unit,
+sends logs to journald, and starts the container at boot by default.
+
+## Service guides
+
+- [Beszel](beszel.md)
+- [Pocket ID](pocket-id.md)
 
 ## Service skeleton
 
@@ -34,25 +40,10 @@ the declarative image used at the next NixOS switch.
 - Store persistent state in an explicit host directory or named volume and
   include its backup policy with the service.
 - Put secrets in a managed runtime file and reference it with
-  `environmentFiles`; do not commit secret values in `environment`.
+  `environmentFiles` or the service's supported file-based secret option; do
+  not commit secret values in `environment`.
 - Prefer a dedicated rootless Podman user when the workload supports it.
   Rootful containers should be reserved for services that need host devices,
   privileged ports, or similar access.
 - Review image release notes and let the NixOS CI build pass before merging a
   Renovate PR. Container image updates are intentionally not automerged.
-
-## Pocket ID
-
-Pocket ID is exposed by Docktail at
-`https://id.${config.fleet.tailscale.magicDnsSuffix}`. The host configuration
-must set `fleet.tailscale.magicDnsSuffix` to its `*.ts.net` MagicDNS suffix.
-
-Its Agenix secret contains only the raw encryption key, without a trailing
-newline. Generate a new installation's key with:
-
-```console
-openssl rand -base64 32 | tr -d '\n'
-```
-
-Do not replace this key after Pocket ID contains data without following Pocket
-ID's encryption-key rotation procedure.
