@@ -33,12 +33,16 @@ in
       environment = {
         DISABLE_SSH = "true";
         HUB_URL = "https://beszel.${config.fleet.tailscale.magicDnsSuffix}";
+        INTEL_GPU_DEVICE = "drm:${cfg.gpuDevice}";
         KEY = cfg.publicKey;
         LISTEN = "45876";
         SYSTEM_NAME = config.networking.hostName;
         TOKEN_FILE = tokenPath;
       };
-      extraOptions = [ "--network=host" ];
+      extraOptions = [
+        "--network=host"
+        "--security-opt=seccomp=unconfined"
+      ];
       volumes = [
         "/etc/localtime:/etc/localtime:ro"
         "/run/docker.sock:/var/run/docker.sock:ro"
