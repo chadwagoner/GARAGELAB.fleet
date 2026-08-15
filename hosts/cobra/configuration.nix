@@ -62,6 +62,31 @@
   };
 
   # ------------------------------------------------------------
+  # HOMARR
+  # ------------------------------------------------------------
+  age.secrets.cobra-homarr-encryption-key = {
+    file = ../../secrets/cobra-homarr-encryption-key.age;
+    owner = "root";
+    group = "root";
+    mode = "0400";
+  };
+
+  fleet.service.homarr.encryptionKeyFile =
+    config.age.secrets.cobra-homarr-encryption-key.path;
+
+  # ------------------------------------------------------------
+  # HOME ASSISTANT
+  # ------------------------------------------------------------
+  fleet.service.home-assistant.docktailLabels = {
+    "docktail.service.enable" = "true";
+    "docktail.service.name" = "home-assistant";
+    "docktail.service.port" = "8123";
+    "docktail.service.protocol" = "http";
+    "docktail.service.service-port" = "443";
+    "docktail.service.service-protocol" = "https";
+  };
+
+  # ------------------------------------------------------------
   # NFS
   # ------------------------------------------------------------
   fleet.nfs.mounts = {
