@@ -86,6 +86,17 @@
     "docktail.service.service-protocol" = "https";
   };
 
+  networking.firewall.interfaces.enp86s0 = {
+    allowedTCPPorts = [
+      1400 # Sonos event callbacks
+      8123 # Home Assistant web UI and API
+    ];
+    allowedUDPPorts = [
+      1900 # SSDP/UPnP discovery
+      5353 # mDNS/Zeroconf discovery
+    ];
+  };
+
   # ------------------------------------------------------------
   # NFS
   # ------------------------------------------------------------

@@ -29,7 +29,5 @@ in
 
     systemd.services.podman-home-assistant.serviceConfig.Restart =
       lib.mkForce "always";
-
-    networking.firewall.allowedTCPPorts = [ 8123 ];
   };
 }
