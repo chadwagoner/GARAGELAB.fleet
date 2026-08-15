@@ -27,7 +27,7 @@ in
     boot.kernel.sysctl."kernel.perf_event_paranoid" = 2;
 
     virtualisation.oci-containers.containers.beszel-agent-intel = {
-      image = "docker.io/henrygd/beszel-agent-intel:0.18.7";
+      image = "docker.io/henrygd/beszel-agent-intel:0.18.7@sha256:fa7dacb674eb2432d7e3cae43a512d639a4e7aa51cf2db9e140fba8a43bff5a2";
       capabilities.PERFMON = true;
       devices = [ "${cfg.gpuDevice}:${cfg.gpuDevice}" ];
       environment = {
