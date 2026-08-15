@@ -2,7 +2,7 @@
 
 {
   virtualisation.oci-containers.containers.profilarr = {
-    image = "ghcr.io/dictionarry-hub/profilarr:2.1.0";
+    image = "ghcr.io/dictionarry-hub/profilarr:2.1.0@sha256:75a43c9c19c70f6e48315d4ed5cef3232d905da8fab397391a2078a5e0fd7ec1";
     environment = {
       PGID = "100";
       PUID = "1000";
