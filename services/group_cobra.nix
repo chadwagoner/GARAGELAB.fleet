@@ -4,6 +4,7 @@
   # Keep service imports explicit so adding a file does not deploy it by accident.
   imports = [
     ./service_adguard.nix
+    ./service_beszel-agent-intel.nix
     ./service_beszel.nix
     ./service_cleanuparr.nix
     ./service_docktail.nix

@@ -46,6 +46,21 @@
   };
 
   # ------------------------------------------------------------
+  # BESZEL AGENT
+  # ------------------------------------------------------------
+  age.secrets.cobra-beszel-agent = {
+    file = ../../secrets/cobra-beszel-agent.age;
+    owner = "root";
+    group = "root";
+    mode = "0400";
+  };
+
+  fleet.service.beszel-agent-intel = {
+    publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIqhWw6iQ94vH4tnuW5SBNN35y75A3OBEQdd9Wbh6tsQ";
+    tokenFile = config.age.secrets.cobra-beszel-agent.path;
+  };
+
+  # ------------------------------------------------------------
   # NFS
   # ------------------------------------------------------------
   fleet.nfs.mounts = {
