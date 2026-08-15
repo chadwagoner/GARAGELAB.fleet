@@ -12,6 +12,12 @@ let
 in
 {
   options.fleet.tailscale = {
+    acceptDns = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Whether Tailscale should configure DNS for MagicDNS and split-DNS routes.";
+    };
+
     ssh = lib.mkEnableOption "Tailscale SSH";
 
     magicDnsSuffix = lib.mkOption {
@@ -54,7 +60,7 @@ in
       ];
 
       extraSetFlags = [
-        "--accept-dns=false"
+        (boolFlag "accept-dns" cfg.acceptDns)
         (boolFlag "ssh" cfg.ssh)
         (boolFlag "advertise-exit-node" cfg.advertiseExitNode)
         "--advertise-routes=${lib.concatStringsSep "," cfg.advertiseRoutes}"
