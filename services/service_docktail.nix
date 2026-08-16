@@ -25,7 +25,16 @@
       ];
     };
 
-    systemd.services.podman-docktail.serviceConfig.Restart =
-      lib.mkForce "always";
+    systemd.services.podman-docktail = {
+      after = [
+        "tailscaled-autoconnect.service"
+        "tailscaled-set.service"
+      ];
+      wants = [
+        "tailscaled-autoconnect.service"
+        "tailscaled-set.service"
+      ];
+      serviceConfig.Restart = lib.mkForce "always";
+    };
   };
 }
