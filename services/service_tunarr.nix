@@ -16,6 +16,7 @@
       "docktail.service.service-protocol" = "https";
     };
     networks = [ "proxy" ];
+    ports = [ "8000:8000" ];
     volumes = [
       "/etc/localtime:/etc/localtime:ro"
       "tunarr.data:/config/tunarr"
@@ -24,4 +25,6 @@
 
   systemd.services.podman-tunarr.serviceConfig.Restart =
     lib.mkForce "always";
+
+  networking.firewall.allowedTCPPorts = [ 8000 ];
 }
