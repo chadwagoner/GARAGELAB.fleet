@@ -19,5 +19,6 @@
     ./service_pulsarr.nix
     ./service_radarr.nix
     ./service_sonarr.nix
+    ./service_tunarr.nix
   ];
 }
