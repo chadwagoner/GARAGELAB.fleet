@@ -52,7 +52,15 @@ in
     };
 
     systemd.services.podman-beszel-agent-intel = {
-      after = [ "podman.socket" ];
+      after = [
+        "podman.socket"
+        "tailscaled-autoconnect.service"
+        "tailscaled-set.service"
+      ];
+      wants = [
+        "tailscaled-autoconnect.service"
+        "tailscaled-set.service"
+      ];
       requires = [ "podman.socket" ];
       serviceConfig.Restart = lib.mkForce "always";
     };
