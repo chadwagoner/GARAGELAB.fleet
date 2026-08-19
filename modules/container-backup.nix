@@ -72,7 +72,7 @@ let
 
   podman = lib.getExe config.virtualisation.podman.package;
   restic = lib.getExe pkgs.restic;
-  sudo = lib.getExe pkgs.sudo;
+  sudo = "${config.security.wrapperDir}/sudo";
   systemctl = lib.getExe' pkgs.systemd "systemctl";
 
   prepareScript = pkgs.writeShellApplication {
@@ -110,7 +110,6 @@ let
     runtimeInputs = [
       pkgs.coreutils
       pkgs.restic
-      pkgs.sudo
       pkgs.systemd
       pkgs.util-linux
     ];
