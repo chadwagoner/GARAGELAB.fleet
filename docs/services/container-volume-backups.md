@@ -2,7 +2,7 @@
 
 Cobra backs up the named volumes used by its deployed Podman containers to an
 encrypted Restic repository on the `backup` NFS mount. The backup runs weekly
-on Sunday at 03:30 UTC. Monthly maintenance applies the retention policy and
+on Sunday at 09:30 UTC. Monthly maintenance applies the retention policy and
 checks repository integrity.
 
 The backup module discovers named volumes from the final
@@ -52,7 +52,7 @@ makes the encrypted backups unrecoverable.
 
 ## Schedule and retention
 
-- Backup: Sunday at 03:30 UTC
+- Backup: Sunday at 09:30 UTC
 - Maintenance: the first day of each month at 05:00 UTC
 - Retention: 8 weekly, 12 monthly, and 3 yearly snapshots per volume
 
@@ -79,6 +79,35 @@ Inspect the schedules and recent backup logs:
 make remote-backup-status
 ```
 
+List every container-volume snapshot, or only snapshots for one named volume:
+
+```console
+make remote-backup-list
+make remote-backup-list VOLUME=home-assistant.config
+```
+
+List the files stored in the latest snapshot for a volume. Specify a snapshot
+ID only when inspecting an older version:
+
+```console
+make remote-backup-files VOLUME=home-assistant.config
+make remote-backup-files VOLUME=home-assistant.config SNAPSHOT=SNAPSHOT_ID
+```
+
+Run the same repository integrity check used by monthly maintenance. The full
+data variant reads every stored pack and can take substantially longer:
+
+```console
+make remote-backup-check
+make remote-backup-check-data
+```
+
+Run retention, pruning, and the regular integrity check immediately:
+
+```console
+make remote-backup-maintenance
+```
+
 On Cobra, inspect both units directly when troubleshooting:
 
 ```console
@@ -87,9 +116,52 @@ systemctl list-timers 'fleet-container-volume-backup*' --all --no-pager
 sudo journalctl -u fleet-container-volume-backup.service -n 100 --no-pager
 ```
 
+## Download a backup
+
+Snapshots contain one Podman volume export named `<volume>.tar`. Restic can
+select the latest snapshot carrying that volume's tag, so downloading the
+newest backup does not require looking up its snapshot ID first:
+
+```console
+make remote-backup-download \
+  VOLUME=home-assistant.config \
+  OUTPUT=home-assistant.config.tar
+```
+
+To download an older version, list the volume's snapshot history and pass the
+chosen ID explicitly:
+
+```console
+make remote-backup-list VOLUME=home-assistant.config
+make remote-backup-download \
+  VOLUME=home-assistant.config \
+  SNAPSHOT=SNAPSHOT_ID \
+  OUTPUT=home-assistant.config-old.tar
+```
+
+The download target writes through an `OUTPUT.partial` file and refuses to
+overwrite either an existing output or partial file. Inspect the downloaded
+archive locally without extracting it:
+
+```console
+tar -tvf home-assistant.config.tar
+```
+
+The tar file is the decrypted volume export. Protect or remove local downloads
+when they are no longer needed; Restic encryption only protects data while it
+remains inside the repository.
+
+## Test a restore
+
 A successful unit is not a complete restore test. Periodically restore a
 snapshot into a newly created temporary Podman volume. First list snapshots as
-the repository owner:
+from the administrator workstation:
+
+```console
+make remote-backup-list VOLUME=home-assistant.config
+```
+
+Then, on Cobra, restore the selected archive into a new test volume:
 
 ```console
 sudo -u nix restic \
