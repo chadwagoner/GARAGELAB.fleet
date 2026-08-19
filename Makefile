@@ -21,6 +21,7 @@ export XDG_CACHE_HOME
 	git-cleanup-preview git-cleanup git-pr-create \
 	nix-info nix-config-check nix-parse nix-show nix-eval nix-check nix-update agenix-edit \
 	remote-build remote-dry-activate remote-test remote-switch remote-status \
+	remote-container-services remote-containers \
 	remote-backup-prepare remote-backup remote-backup-status remote-backup-list \
 	remote-backup-files remote-backup-download remote-backup-check \
 	remote-backup-check-data remote-backup-maintenance remote-reboot
@@ -96,6 +97,12 @@ remote-switch: ## Build and persistently activate the configuration on the NixOS
 
 remote-status: ## Show failed systemd units and recent boot errors on the NixOS host.
 	@ssh "$(REMOTE)" 'systemctl --failed; journalctl -b -p err..alert --no-pager -n 50'
+
+remote-container-services: ## Show systemd status for all Podman container services.
+	@ssh "$(REMOTE)" systemctl list-units 'podman-*.service' --all --no-pager
+
+remote-containers: ## List all Podman containers, including stopped containers.
+	@ssh "$(REMOTE)" 'sudo podman container ls --all --format "table {{.ID}}\t{{.Names}}\t{{.Status}}\t{{.Ports}}"'
 
 remote-backup-prepare: ## Ensure the remote host's hostname backup directory exists.
 	@ssh "$(REMOTE)" sudo systemctl start fleet-container-volume-backup-prepare.service
