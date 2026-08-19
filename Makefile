@@ -16,7 +16,8 @@ export XDG_CACHE_HOME
 .PHONY: help \
 	git-cleanup-preview git-cleanup git-pr-create \
 	nix-info nix-config-check nix-parse nix-show nix-eval nix-check nix-update agenix-edit \
-	remote-build remote-dry-activate remote-test remote-switch remote-status
+	remote-build remote-dry-activate remote-test remote-switch remote-status \
+	remote-backup-prepare remote-backup remote-backup-status remote-reboot
 
 help: ## Show available targets.
 	@awk 'BEGIN { FS = ":.*## " } /^[a-zA-Z0-9_.-]+:.*## / { printf "  %-22s %s\n", $$1, $$2 }' $(MAKEFILE_LIST)
@@ -89,6 +90,15 @@ remote-switch: ## Build and persistently activate the configuration on the NixOS
 
 remote-status: ## Show failed systemd units and recent boot errors on the NixOS host.
 	@ssh "$(REMOTE)" 'systemctl --failed; journalctl -b -p err..alert --no-pager -n 50'
+
+remote-backup-prepare: ## Ensure the remote host's hostname backup directory exists.
+	@ssh "$(REMOTE)" sudo systemctl start fleet-container-volume-backup-prepare.service
+
+remote-backup: ## Run the container-volume backup on the remote host now.
+	@ssh "$(REMOTE)" sudo systemctl start fleet-container-volume-backup.service
+
+remote-backup-status: ## Show container-volume backup timers and recent logs.
+	@ssh "$(REMOTE)" 'systemctl list-timers "fleet-container-volume-backup*" --all --no-pager; sudo journalctl -u fleet-container-volume-backup.service -n 100 --no-pager'
 
 remote-reboot: ## Reboot the NixOS host.
 	@ssh "$(REMOTE)" sudo shutdown -r now

@@ -88,6 +88,32 @@
     config.age.secrets.cobra-homarr-encryption-key.path;
 
   # ------------------------------------------------------------
+  # CONTAINER VOLUME BACKUPS
+  # ------------------------------------------------------------
+  age.secrets.cobra-container-backup-restic-password = {
+    file = ../../secrets/cobra-container-backup-restic-password.age;
+    owner = "nix";
+    group = "users";
+    mode = "0400";
+  };
+
+  fleet.backup.containerVolumes = {
+    enable = true;
+    mount = "backup";
+    repositoryName = "restic";
+    schedule = "Sun *-*-* 09:30:00 UTC";
+    excludeVolumes = [ "downloads" ];
+    passwordFile =
+      config.age.secrets.cobra-container-backup-restic-password.path;
+
+    retention = {
+      weekly = 8;
+      monthly = 12;
+      yearly = 3;
+    };
+  };
+
+  # ------------------------------------------------------------
   # HOME ASSISTANT
   # ------------------------------------------------------------
   fleet.service.home-assistant.docktailLabels = {

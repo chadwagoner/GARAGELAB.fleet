@@ -16,6 +16,11 @@ in {
     cobra
   ];
 
+  "cobra-container-backup-restic-password.age".publicKeys = [
+    admin
+    cobra
+  ];
+
   # ------------------------------------------------------------
   # GENERAL
   # ------------------------------------------------------------

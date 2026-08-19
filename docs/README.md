@@ -13,6 +13,7 @@ updated alongside any change to its hardware, network, secrets, or services.
 Service-specific guides:
 
 - [Beszel](services/beszel.md)
+- [Container-volume backups](services/container-volume-backups.md)
 - [Pocket ID](services/pocket-id.md)
 
 The root [`README.md`](../README.md) remains the command reference. The guides

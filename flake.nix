@@ -29,6 +29,7 @@
           ./modules/users.nix
           ./modules/auto-upgrade.nix
           ./services/group_cobra.nix
+          ./modules/container-backup.nix
           ./hosts/cobra/configuration.nix
         ];
       };

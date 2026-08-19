@@ -12,6 +12,7 @@ sends logs to journald, and starts the container at boot by default.
 ## Service guides
 
 - [Beszel](beszel.md)
+- [Container-volume backups](container-volume-backups.md)
 - [Pocket ID](pocket-id.md)
 
 ## Service skeleton
