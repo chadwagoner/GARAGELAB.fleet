@@ -43,8 +43,6 @@
   networking.defaultGateway = "192.168.128.1";
   networking.nameservers = [ "192.168.128.1" ];
 
-  # Tailscale routing enables IPv6 forwarding. Continue accepting router
-  # advertisements so Thread border routers can publish their IPv6 routes.
   boot.kernel.sysctl."net.ipv6.conf.enp86s0.accept_ra" = 2;
   boot.kernel.sysctl."net.ipv6.conf.enp86s0.accept_ra_rt_info_max_plen" = 64;
 
