@@ -33,5 +33,25 @@
           ./hosts/cobra/configuration.nix
         ];
       };
+
+      nixosConfigurations."edge-1217" = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+
+        specialArgs = {
+          inherit inputs;
+        };
+
+        modules = [
+          agenix.nixosModules.default
+          ./modules/common.nix
+          ./modules/podman.nix
+          ./modules/ssh.nix
+          ./modules/tailscale.nix
+          ./modules/users.nix
+          ./modules/auto-upgrade.nix
+          ./services/group_edge-1217.nix
+          ./hosts/edge-1217/configuration.nix
+        ];
+      };
     };
 }
