@@ -3,12 +3,13 @@ SHELL := /bin/sh
 .DEFAULT_GOAL := help
 
 HOST ?= cobra
-REMOTE ?= cobra
+REMOTE ?= $(HOST)
 FLAKE ?= .
 REMOTE_FLAKE ?= github:chadwagoner/GARAGELAB.fleet
 NIX ?= nix
 NIX_FLAGS ?= --extra-experimental-features "nix-command flakes"
 AGENIX_FLAKE ?= github:ryantm/agenix
+AGENIX_IDENTITY ?=
 XDG_CACHE_HOME ?= /private/tmp/garagelab-fleet-nix-cache
 BACKUP_REPOSITORY ?= /srv/backup/$(HOST)/restic
 BACKUP_PASSWORD_FILE ?= /run/agenix/$(HOST)-container-backup-restic-password
@@ -19,7 +20,7 @@ export XDG_CACHE_HOME
 
 .PHONY: help \
 	git-cleanup-preview git-cleanup git-pr-create \
-	nix-info nix-config-check nix-parse nix-show nix-eval nix-check nix-update agenix-edit \
+	nix-info nix-config-check nix-parse nix-show nix-eval nix-check nix-update agenix-edit agenix-rekey \
 	remote-build remote-dry-activate remote-test remote-switch remote-status \
 	remote-container-services remote-containers \
 	remote-backup-prepare remote-backup remote-backup-status remote-backup-list \
@@ -78,6 +79,22 @@ agenix-edit: ## Edit an age secret (AGE_FILE=path/to/secret.age).
 		exit 2; \
 	fi
 	@cd ./secrets && $(NIX) $(NIX_FLAGS) run "$(AGENIX_FLAKE)" -- -e "$(AGE_FILE)"
+
+agenix-rekey: ## Re-encrypt all secrets or one AGE_FILE (optional AGENIX_IDENTITY=private-key).
+	@if [ -n "$(AGE_FILE)" ] && [ ! -f "./secrets/$(AGE_FILE)" ]; then \
+		printf 'Secret file not found: secrets/%s\n' "$(AGE_FILE)" >&2; \
+		exit 2; \
+	fi
+	@cd ./secrets && \
+		set --; \
+		if [ -n "$(AGENIX_IDENTITY)" ]; then \
+			set -- -i "$(AGENIX_IDENTITY)"; \
+		fi; \
+		if [ -n "$(AGE_FILE)" ]; then \
+			EDITOR=true $(NIX) $(NIX_FLAGS) run "$(AGENIX_FLAKE)" -- -e "$(AGE_FILE)" "$$@"; \
+		else \
+			$(NIX) $(NIX_FLAGS) run "$(AGENIX_FLAKE)" -- -r "$$@"; \
+		fi
 
 remote-build: ## Build the selected configuration on the NixOS host.
 	@ssh "$(REMOTE)" sudo nixos-rebuild build \
