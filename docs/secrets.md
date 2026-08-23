@@ -2,10 +2,11 @@
 
 This repository stores encrypted Agenix payloads in [`secrets/`](../secrets/).
 The recipient policy in [`secrets/secrets.nix`](../secrets/secrets.nix) grants
-decryption to two public identities:
+decryption to the public identities assigned to each file:
 
 - `admin`: the administrator/recovery SSH key used to edit or rekey secrets
-- `cobra`: `/etc/ssh/ssh_host_ed25519_key.pub` on the NixOS host
+- host recipients such as `cobra` and `edge-1217`: the corresponding host's
+  `/etc/ssh/ssh_host_ed25519_key.pub`
 
 Private keys and decrypted values must remain outside Git. During activation,
 Agenix decrypts the selected files into root-owned runtime paths under
@@ -86,32 +87,54 @@ ssh cobra sudo journalctl -u podman-beszel-agent-intel.service -n 100 --no-pager
 ```
 
 The encrypted file can be committed. The plaintext token, administrator
-private key, Cobra private host key, and `/run/agenix` contents cannot.
+private key, host private keys, and `/run/agenix` contents cannot.
 
-## Rekey after a host-key change
+## Rekey after a recipient change
 
-Use this procedure when a reinstall or intentional SSH host-key rotation gives
-Cobra a new `/etc/ssh/ssh_host_ed25519_key.pub`.
+Use this procedure after adding a host recipient, removing a recipient, or when
+a reinstall or intentional SSH host-key rotation changes a host's
+`/etc/ssh/ssh_host_ed25519_key.pub`.
 
-1. On Cobra, display and securely copy the new **public** key:
+1. On the affected host, display and securely copy the new **public** key:
 
    ```console
    sudo cat /etc/ssh/ssh_host_ed25519_key.pub
    ```
 
-2. On the administrator workstation, replace only the `cobra` public key in
-   `secrets/secrets.nix`. Keep the verified `admin` recovery recipient.
+2. On the administrator workstation, update the intended `publicKeys` entries
+   in `secrets/secrets.nix`. Keep the verified `admin` recovery recipient.
 
-3. From the secrets directory, re-encrypt every managed payload for the new
-   recipient set:
+3. From the repository root, re-encrypt every managed payload for the current
+   recipient policy. If Agenix can discover the administrator identity through
+   the SSH agent or standard key paths, run:
 
    ```console
-   cd secrets
-   nix run github:ryantm/agenix -- -r -i /secure/path/admin-identity
-   cd ..
+   make agenix-rekey
    ```
 
-4. Confirm all declared files were rekeyed:
+   Otherwise, provide the private identity explicitly:
+
+   ```console
+   make agenix-rekey AGENIX_IDENTITY=/secure/path/admin-identity
+   ```
+
+   To re-encrypt only one existing secret, pass its path relative to the
+   `secrets/` directory. This uses Agenix's edit operation with a no-op editor,
+   preserving the plaintext while applying the file's current recipients:
+
+   ```console
+   make agenix-rekey AGE_FILE=tailscale-oauth.age
+   ```
+
+   The file and identity options can be combined:
+
+   ```console
+   make agenix-rekey \
+     AGE_FILE=tailscale-oauth.age \
+     AGENIX_IDENTITY=/secure/path/admin-identity
+   ```
+
+4. Confirm the intended encrypted files were rekeyed:
 
    ```console
    git status --short
@@ -122,12 +145,12 @@ Cobra a new `/etc/ssh/ssh_host_ed25519_key.pub`.
 5. Commit and push `secrets/secrets.nix` and every changed `.age` file. The
    GitHub-based deployment cannot see local-only ciphertext.
 
-6. Build or test the pushed branch on Cobra. Activation should populate every
-   declared secret without a decryption error.
+6. Build or test the pushed branch on each affected host. Activation should
+   populate every declared secret without a decryption error.
 
-Do not remove the old Cobra recipient until the new host public key is verified
+Do not remove an old host recipient until the new host public key is verified
 and the rekey succeeds. If the administrator private key cannot decrypt the
-old ciphertext and the old Cobra private key is gone, the encrypted payloads
+old ciphertext and the old host private key is gone, the encrypted payloads
 cannot be recovered; issue new upstream credentials instead.
 
 ## Add a new secret
