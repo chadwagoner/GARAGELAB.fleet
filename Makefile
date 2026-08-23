@@ -10,6 +10,7 @@ NIX ?= nix
 NIX_FLAGS ?= --extra-experimental-features "nix-command flakes"
 AGENIX_FLAKE ?= github:ryantm/agenix
 AGENIX_IDENTITY ?=
+AUTO_UPGRADE_SINCE ?= 8 days ago
 XDG_CACHE_HOME ?= /private/tmp/garagelab-fleet-nix-cache
 BACKUP_REPOSITORY ?= /srv/backup/$(HOST)/restic
 BACKUP_PASSWORD_FILE ?= /run/agenix/$(HOST)-container-backup-restic-password
@@ -21,7 +22,7 @@ export XDG_CACHE_HOME
 .PHONY: help \
 	git-cleanup-preview git-cleanup git-pr-create \
 	nix-info nix-config-check nix-parse nix-show nix-eval nix-check nix-update agenix-edit agenix-rekey \
-	remote-build remote-dry-activate remote-test remote-switch remote-status \
+	remote-build remote-dry-activate remote-test remote-switch remote-status remote-auto-upgrade-status \
 	remote-container-services remote-containers \
 	remote-backup-prepare remote-backup remote-backup-status remote-backup-list \
 	remote-backup-files remote-backup-download remote-backup-check \
@@ -114,6 +115,19 @@ remote-switch: ## Build and persistently activate the configuration on the NixOS
 
 remote-status: ## Show failed systemd units and recent boot errors on the NixOS host.
 	@ssh "$(REMOTE)" 'systemctl --failed; journalctl -b -p err..alert --no-pager -n 50'
+
+remote-auto-upgrade-status: ## Show the auto-upgrade timer, last result, and recent logs.
+	@if [ -z "$(AUTO_UPGRADE_SINCE)" ]; then \
+		printf 'Usage: make remote-auto-upgrade-status [HOST=name] [REMOTE=ssh-target] [AUTO_UPGRADE_SINCE="8 days ago"]\n' >&2; \
+		exit 2; \
+	fi
+	@ssh "$(REMOTE)" 'systemctl list-timers nixos-upgrade.timer --all --no-pager; \
+		sudo systemctl show nixos-upgrade.service \
+			-p Result \
+			-p ExecMainStartTimestamp \
+			-p ExecMainExitTimestamp \
+			-p ExecMainStatus; \
+		sudo journalctl -u nixos-upgrade.service --since "$(AUTO_UPGRADE_SINCE)" --no-pager'
 
 remote-container-services: ## Show systemd status for all Podman container services.
 	@ssh "$(REMOTE)" systemctl list-units 'podman-*.service' --all --no-pager

@@ -40,7 +40,10 @@ Remote targets use the repository's default GitHub branch unless
 
 `remote-test` activates the result until reboot; `remote-switch` makes it the
 boot default. Use `make remote-status` to show failed units and recent boot
-errors after activation.
+errors after activation. Use `make remote-auto-upgrade-status` to show the
+automatic-upgrade timer, last service result, and logs from the previous eight
+days. Override the log window with, for example,
+`AUTO_UPGRADE_SINCE="30 days ago"`.
 
 ## NixOS troubleshooting
 
