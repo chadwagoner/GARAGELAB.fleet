@@ -99,7 +99,7 @@
     enable = true;
     mount = "backup";
     repositoryName = "restic";
-    schedule = "Sun *-*-* 09:30:00 UTC";
+    schedule = "Sun *-*-* 10:00:00 UTC";
     excludeVolumes = [ "downloads" ];
     passwordFile =
       config.age.secrets.cobra-container-backup-restic-password.path;
