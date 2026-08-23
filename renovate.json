@@ -48,6 +48,77 @@
       "minimumReleaseAgeBehaviour": "timestamp-optional",
       "pinDigests": true,
       "automerge": false
+    },
+    {
+      "description": "Keep Beszel hub and agent image updates together",
+      "matchManagers": [
+        "custom.regex"
+      ],
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchFileNames": [
+        "services/service_beszel.nix",
+        "services/service_beszel-agent-intel.nix"
+      ],
+      "groupName": "Beszel container images"
+    },
+    {
+      "description": "Group non-major Home Assistant image updates",
+      "matchManagers": [
+        "custom.regex"
+      ],
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchFileNames": [
+        "services/service_home-assistant.nix",
+        "services/service_home-assistant-matter.nix"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "digest",
+        "pinDigest"
+      ],
+      "groupName": "Home Assistant container images"
+    },
+    {
+      "description": "Group non-major media automation image updates",
+      "matchManagers": [
+        "custom.regex"
+      ],
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchFileNames": [
+        "services/service_cleanuparr.nix",
+        "services/service_nzbget.nix",
+        "services/service_profilarr.nix",
+        "services/service_prowlarr.nix",
+        "services/service_radarr.nix",
+        "services/service_sonarr.nix"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "digest",
+        "pinDigest"
+      ],
+      "groupName": "Media automation container images"
+    },
+    {
+      "description": "Group non-major GitHub Actions updates",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "digest",
+        "pinDigest"
+      ],
+      "groupName": "GitHub Actions"
     }
   ]
 }
