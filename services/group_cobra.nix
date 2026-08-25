@@ -12,7 +12,6 @@
     ./service_home-assistant.nix
     ./service_nzbget.nix
     ./service_plex.nix
-    # ./service_pocket-id.nix # pausing on OIDC auth for now
     ./service_profilarr.nix
     ./service_prowlarr.nix
     ./service_pulsarr.nix
