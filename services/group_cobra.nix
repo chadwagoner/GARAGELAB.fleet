@@ -19,5 +19,7 @@
     ./service_radarr.nix
     ./service_sonarr.nix
     ./service_tunarr.nix
+    # GAME SERVERS
+    ./service_minecraft-server.nix
   ];
 }
