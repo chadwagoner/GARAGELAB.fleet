@@ -9,7 +9,7 @@
       DIFFICULTY = "peaceful";
       EULA = "true";
       GAMEMODE = "creative";
-      ONLINE_MODE = "false";
+      # ONLINE_MODE = "false";
       SERVER_PORT = "19132";
     };
     extraOptions = [
