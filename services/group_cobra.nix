@@ -2,6 +2,7 @@
 
 {
   imports = [
+    ./service_actual-budget.nix
     ./service_adguard.nix
     ./service_beszel-agent-intel.nix
     ./service_beszel.nix
