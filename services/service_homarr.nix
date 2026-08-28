@@ -12,7 +12,7 @@ in
 
   config = {
     virtualisation.oci-containers.containers.homarr = {
-      image = "ghcr.io/homarr-labs/homarr:v1.76.0@sha256:1a47c2afd892d8939b49195a7098fcbe44f4ac15a74b9ba02ed2de237089542f";
+      image = "ghcr.io/homarr-labs/homarr:v1.76.0@sha256:401709d4624118179c347e06bc1beff716b13aa7c2c1d0aa7472f86e71cca9b7";
       environment = {
         AUTH_PROVIDERS = "credentials";
         BASE_URL = "https://homarr.${config.fleet.tailscale.magicDnsSuffix}";
