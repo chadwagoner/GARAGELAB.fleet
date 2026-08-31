@@ -42,7 +42,7 @@
   # ------------------------------------------------------------
   # HOME ASSISTANT ZIGBEE2MQTT
   # ------------------------------------------------------------
-  # The Aeotec Z-Stick 10 Pro Zigbee interface is `if01`; `if00` is Z-Wave.
+  # The Aeotec Z-Stick 10 Pro Zigbee interface is `if00`; `if01` is Z-Wave.
   age.secrets.cobra-home-assistant-zigbee2mqtt-frontend-auth-token = {
     file = ../../secrets/cobra-home-assistant-zigbee2mqtt-frontend-auth-token.age;
     owner = "root";
@@ -52,7 +52,7 @@
 
   fleet.service.home-assistant-zigbee2mqtt = {
     enable = true;
-    serialDevice = "/dev/serial/by-id/usb-Silicon_Labs_CP2105_Dual_USB_to_UART_Bridge_Controller_0166114C-if01-port0";
+    serialDevice = "/dev/serial/by-id/usb-Silicon_Labs_CP2105_Dual_USB_to_UART_Bridge_Controller_0166114C-if00-port0";
     adapter = "ember";
     frontend = {
       enable = true;
