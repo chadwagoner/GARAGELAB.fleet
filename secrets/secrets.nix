@@ -22,6 +22,11 @@ in {
     cobra
   ];
 
+  "cobra-zigbee2mqtt-frontend-auth-token.age".publicKeys = [
+    admin
+    cobra
+  ];
+
   # ------------------------------------------------------------
   # GENERAL
   # ------------------------------------------------------------

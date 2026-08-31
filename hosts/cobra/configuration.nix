@@ -34,6 +34,34 @@
   # ------------------------------------------------------------
   networking.networkmanager.enable = true;
 
+  # ------------------------------------------------------------
+  # MOSQUITTO
+  # ------------------------------------------------------------
+  fleet.service.mosquitto.enable = true;
+
+  # ------------------------------------------------------------
+  # ZIGBEE2MQTT
+  # ------------------------------------------------------------
+  # The Aeotec Z-Stick 10 Pro Zigbee interface is `if01`; `if00` is Z-Wave.
+  age.secrets.cobra-zigbee2mqtt-frontend-auth-token = {
+    file = ../../secrets/cobra-zigbee2mqtt-frontend-auth-token.age;
+    owner = "root";
+    group = "root";
+    mode = "0400";
+  };
+
+  fleet.service.zigbee2mqtt = {
+    enable = true;
+    serialDevice = "/dev/serial/by-id/usb-Silicon_Labs_CP2105_Dual_USB_to_UART_Bridge_Controller_0166114C-if01-port0";
+    adapter = "ember";
+    frontend = {
+      enable = true;
+      host = "0.0.0.0";
+      port = 8080;
+      authTokenFile = config.age.secrets.cobra-zigbee2mqtt-frontend-auth-token.path;
+    };
+  };
+
   networking.useDHCP = false;
   networking.interfaces.enp86s0.ipv4.addresses = [{
     address = "192.168.128.3";
