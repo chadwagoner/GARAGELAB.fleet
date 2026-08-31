@@ -22,7 +22,7 @@ in {
     cobra
   ];
 
-  "cobra-zigbee2mqtt-frontend-auth-token.age".publicKeys = [
+  "cobra-home-assistant-zigbee2mqtt-frontend-auth-token.age".publicKeys = [
     admin
     cobra
   ];

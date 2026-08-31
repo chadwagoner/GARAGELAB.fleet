@@ -14,7 +14,7 @@ sends logs to journald, and starts the container at boot by default.
 - [Beszel](beszel.md)
 - [Container-volume backups](container-volume-backups.md)
 - [Pocket ID](pocket-id.md)
-- [Zigbee2MQTT](zigbee2mqtt.md)
+- [Home Assistant Zigbee2MQTT](zigbee2mqtt.md)
 
 ## Service skeleton
 

@@ -1,10 +1,10 @@
 { config, lib, ... }:
 
 let
-  cfg = config.fleet.service.zigbee2mqtt;
+  cfg = config.fleet.service.home-assistant-zigbee2mqtt;
 in
 {
-  options.fleet.service.zigbee2mqtt = {
+  options.fleet.service.home-assistant-zigbee2mqtt = {
     enable = lib.mkEnableOption "the Zigbee2MQTT bridge";
 
     serialDevice = lib.mkOption {
@@ -51,16 +51,16 @@ in
   config = lib.mkIf cfg.enable {
     assertions = [
       {
-        assertion = config.fleet.service.mosquitto.enable;
-        message = "fleet.service.zigbee2mqtt requires fleet.service.mosquitto.enable.";
+        assertion = config.fleet.service.home-assistant-mosquitto.enable;
+        message = "fleet.service.home-assistant-zigbee2mqtt requires fleet.service.home-assistant-mosquitto.enable.";
       }
       {
         assertion = cfg.serialDevice != null;
-        message = "fleet.service.zigbee2mqtt requires serialDevice to be set.";
+        message = "fleet.service.home-assistant-zigbee2mqtt requires serialDevice to be set.";
       }
       {
         assertion = !cfg.frontend.enable || cfg.frontend.authTokenFile != null;
-        message = "fleet.service.zigbee2mqtt.frontend requires authTokenFile when enabled.";
+        message = "fleet.service.home-assistant-zigbee2mqtt.frontend requires authTokenFile when enabled.";
       }
     ];
 
@@ -68,7 +68,7 @@ in
       (cfg.frontend.enable && cfg.frontend.host == "0.0.0.0")
       cfg.frontend.port;
 
-    virtualisation.oci-containers.containers.zigbee2mqtt = {
+    virtualisation.oci-containers.containers.home-assistant-zigbee2mqtt = {
       image = "ghcr.io/koenkk/zigbee2mqtt:2.7.2@sha256:60a295b40f4e7fb7ab4d995932369e50f2529837272fa4979e986ec1ffdb7fce";
       devices = lib.optional
         (cfg.serialDevice != null)
@@ -89,13 +89,13 @@ in
       networks = [ "host" ];
       volumes = [
         "/run/udev:/run/udev:ro"
-        "zigbee2mqtt.data:/app/data"
+        "home-assistant-zigbee2mqtt.data:/app/data"
       ];
     };
 
-    systemd.services.podman-zigbee2mqtt = {
-      after = [ "podman-mosquitto.service" ];
-      requires = [ "podman-mosquitto.service" ];
+    systemd.services.podman-home-assistant-zigbee2mqtt = {
+      after = [ "podman-home-assistant-mosquitto.service" ];
+      requires = [ "podman-home-assistant-mosquitto.service" ];
       serviceConfig.Restart = lib.mkForce "always";
     };
   };
