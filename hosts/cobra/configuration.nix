@@ -85,6 +85,24 @@
     advertiseExitNode = true;
   };
 
+  systemd.services.tailscale-serve-nas = {
+    description = "Advertise the NAS Tailscale Service over HTTPS";
+    wantedBy = [ "multi-user.target" ];
+    wants = [ "network-online.target" ];
+    requires = [ "tailscaled-autoconnect.service" ];
+    after = [
+      "network-online.target"
+      "tailscaled-autoconnect.service"
+    ];
+
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart =
+        "${pkgs.tailscale}/bin/tailscale serve --service=svc:nas --https=443 https+insecure://192.168.128.9:5001";
+    };
+  };
+
   # ------------------------------------------------------------
   # BESZEL AGENT
   # ------------------------------------------------------------
