@@ -69,7 +69,7 @@ in
       cfg.frontend.port;
 
     virtualisation.oci-containers.containers.home-assistant-zigbee2mqtt = {
-      image = "ghcr.io/koenkk/zigbee2mqtt:2.7.2@sha256:60a295b40f4e7fb7ab4d995932369e50f2529837272fa4979e986ec1ffdb7fce";
+      image = "ghcr.io/koenkk/zigbee2mqtt:2.14.0@sha256:c13d177dd7f7f396574ab00926188ad542cfb68c6a5d5f84021bebd9adf6ede9";
       devices = lib.optional
         (cfg.serialDevice != null)
         "${cfg.serialDevice}:/dev/ttyACM0";
