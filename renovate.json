@@ -64,7 +64,7 @@
       "groupName": "Beszel container images"
     },
     {
-      "description": "Group non-major Home Assistant image updates",
+      "description": "Group non-major Home Assistant ecosystem image updates",
       "matchManagers": [
         "custom.regex"
       ],
@@ -73,7 +73,9 @@
       ],
       "matchFileNames": [
         "services/service_home-assistant.nix",
-        "services/service_home-assistant-matter.nix"
+        "services/service_home-assistant-matter.nix",
+        "services/service_home-assistant-mosquitto.nix",
+        "services/service_home-assistant-zigbee2mqtt.nix"
       ],
       "matchUpdateTypes": [
         "minor",
