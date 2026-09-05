@@ -4,6 +4,7 @@ SHELL := /bin/sh
 
 HOST ?= cobra
 REMOTE ?= $(HOST)
+REMOTE_TTY ?=
 FLAKE ?= .
 REMOTE_FLAKE ?= github:chadwagoner/GARAGELAB.fleet
 NIX ?= nix
@@ -98,7 +99,7 @@ agenix-rekey: ## Re-encrypt all secrets or one AGE_FILE (optional AGENIX_IDENTIT
 		fi
 
 remote-build: ## Build the selected configuration on the NixOS host.
-	@ssh "$(REMOTE)" sudo nixos-rebuild build \
+	@ssh $(REMOTE_TTY) "$(REMOTE)" sudo nixos-rebuild build \
 		--flake "$(REMOTE_FLAKE)#$(HOST)" --refresh
 
 remote-dry-activate: ## Show what activation would change on the NixOS host.
@@ -106,11 +107,11 @@ remote-dry-activate: ## Show what activation would change on the NixOS host.
 		--flake "$(REMOTE_FLAKE)#$(HOST)" --refresh
 
 remote-test: ## Build and temporarily activate the configuration on the NixOS host.
-	@ssh "$(REMOTE)" sudo nixos-rebuild test \
+	@ssh $(REMOTE_TTY) "$(REMOTE)" sudo nixos-rebuild test \
 		--flake "$(REMOTE_FLAKE)#$(HOST)" --refresh
 
 remote-switch: ## Build and persistently activate the configuration on the NixOS host.
-	@ssh "$(REMOTE)" sudo nixos-rebuild switch \
+	@ssh $(REMOTE_TTY) "$(REMOTE)" sudo nixos-rebuild switch \
 		--flake "$(REMOTE_FLAKE)#$(HOST)" --refresh
 
 remote-status: ## Show failed systemd units and recent boot errors on the NixOS host.
