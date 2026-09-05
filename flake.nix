@@ -53,5 +53,25 @@
           ./hosts/edge-1217/configuration.nix
         ];
       };
+
+      nixosConfigurations."edge-6201" = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+
+        specialArgs = {
+          inherit inputs;
+        };
+
+        modules = [
+          agenix.nixosModules.default
+          ./modules/common.nix
+          ./modules/podman.nix
+          ./modules/ssh.nix
+          ./modules/tailscale.nix
+          ./modules/users.nix
+          ./modules/auto-upgrade.nix
+          ./services/group_edge-6201.nix
+          ./hosts/edge-6201/configuration.nix
+        ];
+      };
     };
 }
