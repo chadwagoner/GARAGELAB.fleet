@@ -73,6 +73,20 @@
   };
 
   # ------------------------------------------------------------
+  # HOME ASSISTANT
+  # ------------------------------------------------------------
+  networking.firewall.interfaces.eno1 = {
+    allowedTCPPorts = [
+      1400 # Sonos event callbacks
+      8123 # Home Assistant web UI and API
+    ];
+    allowedUDPPorts = [
+      1900 # SSDP/UPnP discovery
+      5353 # mDNS/Zeroconf discovery
+    ];
+  };
+
+  # ------------------------------------------------------------
   # NIXOS COMPATIBILITY
   # ------------------------------------------------------------
   system.stateVersion = "26.05";
