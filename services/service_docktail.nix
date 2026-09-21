@@ -19,7 +19,7 @@ in
     };
 
     virtualisation.oci-containers.containers.docktail = {
-      image = "ghcr.io/marvinvr/docktail:1.7.9@sha256:8575a205e221cf7bee7f0e8fbc861affaf9c68072ddba40b2db6b753112b0901";
+      image = "ghcr.io/marvinvr/docktail:1.8.3@sha256:0b63506d16d20b4dc6a5d725d73bde82a88b0b5aa02d8193d049cbf2781bb198";
       environment = {
         TAILSCALE_OAUTH_CLIENT_ID = "kYaEDocmEv11CNTRL";
       } // lib.optionalAttrs (cfg.ignoredServiceNames != [ ]) {
