@@ -11,8 +11,8 @@
     ./service_homarr.nix
     ./service_home-assistant.nix
     ./service_home-assistant-matter.nix
-    ./service_home-assistant-mosquitto.nix
-    ./service_home-assistant-zigbee2mqtt.nix
+    # ./service_home-assistant-mosquitto.nix
+    # ./service_home-assistant-zigbee2mqtt.nix
     ./service_nzbget.nix
     ./service_plex.nix
     ./service_profilarr.nix
