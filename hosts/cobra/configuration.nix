@@ -37,30 +37,30 @@
   # ------------------------------------------------------------
   # HOME ASSISTANT MOSQUITTO
   # ------------------------------------------------------------
-  fleet.service.home-assistant-mosquitto.enable = true;
+  # fleet.service.home-assistant-mosquitto.enable = true;
 
   # ------------------------------------------------------------
   # HOME ASSISTANT ZIGBEE2MQTT
   # ------------------------------------------------------------
   # The Aeotec Z-Stick 10 Pro Zigbee interface is `if00`; `if01` is Z-Wave.
-  age.secrets.cobra-home-assistant-zigbee2mqtt-frontend-auth-token = {
-    file = ../../secrets/cobra-home-assistant-zigbee2mqtt-frontend-auth-token.age;
-    owner = "root";
-    group = "root";
-    mode = "0400";
-  };
+  # age.secrets.cobra-home-assistant-zigbee2mqtt-frontend-auth-token = {
+  #   file = ../../secrets/cobra-home-assistant-zigbee2mqtt-frontend-auth-token.age;
+  #   owner = "root";
+  #   group = "root";
+  #   mode = "0400";
+  # };
 
-  fleet.service.home-assistant-zigbee2mqtt = {
-    enable = true;
-    serialDevice = "/dev/serial/by-id/usb-Silicon_Labs_CP2105_Dual_USB_to_UART_Bridge_Controller_0166114C-if00-port0";
-    adapter = "ember";
-    frontend = {
-      enable = true;
-      host = "0.0.0.0";
-      port = 8080;
-      authTokenFile = config.age.secrets.cobra-home-assistant-zigbee2mqtt-frontend-auth-token.path;
-    };
-  };
+  # fleet.service.home-assistant-zigbee2mqtt = {
+  #   enable = true;
+  #   serialDevice = "/dev/serial/by-id/usb-Silicon_Labs_CP2105_Dual_USB_to_UART_Bridge_Controller_0166114C-if00-port0";
+  #   adapter = "ember";
+  #   frontend = {
+  #     enable = true;
+  #     host = "0.0.0.0";
+  #     port = 8080;
+  #     authTokenFile = config.age.secrets.cobra-home-assistant-zigbee2mqtt-frontend-auth-token.path;
+  #   };
+  # };
 
   networking.useDHCP = false;
   networking.interfaces.enp86s0.ipv4.addresses = [{
