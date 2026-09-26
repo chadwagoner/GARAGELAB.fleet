@@ -2,7 +2,7 @@
 
 {
   virtualisation.oci-containers.containers.prowlarr = {
-    image = "ghcr.io/linuxserver/prowlarr:2.5.2@sha256:c7502a75b021d964481c129c84590b9cbc40f83aadd4e553f173871bc0deaa3c";
+    image = "ghcr.io/linuxserver/prowlarr:2.6.5@sha256:f2b26429893d4c4cb71941b7ee50b1bdecd9d5f9f9e02d5410615e9f4f7c8d95";
     environment = {
       PGID = "100";
       PUID = "1000";
