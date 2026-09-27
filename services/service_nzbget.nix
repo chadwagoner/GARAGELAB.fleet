@@ -2,7 +2,7 @@
 
 {
   virtualisation.oci-containers.containers.nzbget = {
-    image = "ghcr.io/linuxserver/nzbget:26.3.20260904@sha256:4cc4afc944e0239037b7b95c64deb8e39e49ca770b7e2f61476a04443d7fcab9";
+    image = "ghcr.io/linuxserver/nzbget:26.3.20260925@sha256:ac88c1293bec960e287bdaaca174020fab4c0f179f739e26f500d3def8015ed7";
     environment = {
       PGID = "100";
       PUID = "1000";
