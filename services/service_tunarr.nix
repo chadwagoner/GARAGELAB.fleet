@@ -2,7 +2,7 @@
 
 {
   virtualisation.oci-containers.containers.tunarr = {
-    image = "docker.io/chrisbenincasa/tunarr:1.3.14@sha256:4f7e682d2ab5d595490b3a25b046283fb99d4d88706764941c099ba04e011b78";
+    image = "docker.io/chrisbenincasa/tunarr:1.3.15@sha256:ae8ec490459e773571b277e2f64248605c1ea64d49ee4d26aa01741409d60369";
     environment = {
       TZ = config.time.timeZone;
     };
