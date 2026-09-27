@@ -18,7 +18,7 @@ concurrency:
 jobs:
   discover-hosts:
     name: Discover NixOS hosts
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 10
     outputs:
       hosts: ${{ steps.hosts.outputs.hosts }}
@@ -54,7 +54,7 @@ jobs:
   build-hosts:
     name: Build NixOS host / ${{ matrix.host }}
     needs: discover-hosts
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 60
     strategy:
       fail-fast: false
@@ -87,7 +87,7 @@ jobs:
     needs:
       - discover-hosts
       - build-hosts
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 5
 
     steps:
