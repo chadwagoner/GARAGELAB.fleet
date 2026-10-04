@@ -52,6 +52,13 @@
       "separateMajorMinor": false
     },
     {
+      "description": "Keep Pulsarr on 0.x release tags until upstream publishes an official 1.x release",
+      "matchDepNames": [
+        "docker.io/lakker/pulsarr"
+      ],
+      "allowedVersions": "/^0\\.\\d+\\.\\d+$/"
+    },
+    {
       "description": "Group non-major GitHub Actions updates",
       "matchManagers": [
         "github-actions"
