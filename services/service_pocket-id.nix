@@ -12,7 +12,7 @@ in
   };
 
   virtualisation.oci-containers.containers.id = {
-    image = "ghcr.io/pocket-id/pocket-id:v2.16.0@sha256:9366436f3fd21619ed7e5709fa0acac88130f73414ec8ee1caf768fc487111ea";
+    image = "ghcr.io/pocket-id/pocket-id:v2.17.0@sha256:19f556d5852115c8ebbef271f6f7cf610d8803312a1fa63f29e1b342fe9d2939";
     environment = {
       ANALYTICS_DISABLED = "true";
       APP_URL = "https://id.${config.fleet.tailscale.magicDnsSuffix}";
