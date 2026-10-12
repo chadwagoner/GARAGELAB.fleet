@@ -24,6 +24,13 @@
   "timezone": "America/Indiana/Indianapolis",
   "packageRules": [
     {
+      "description": "Skip releases whose final version component is zero, including tags with suffixes",
+      "matchPackageNames": [
+        "*"
+      ],
+      "allowedVersions": "!/\\.0(?:[-+]|$)/"
+    },
+    {
       "description": "Update NixOS flake inputs weekly",
       "matchManagers": [
         "nix"
@@ -52,11 +59,11 @@
       "separateMajorMinor": false
     },
     {
-      "description": "Keep Pulsarr on 0.x release tags until upstream publishes an official 1.x release",
+      "description": "Keep Pulsarr on 0.x release tags with a nonzero patch until upstream publishes an official 1.x release",
       "matchDepNames": [
         "docker.io/lakker/pulsarr"
       ],
-      "allowedVersions": "/^0\\.\\d+\\.\\d+$/"
+      "allowedVersions": "/^0\\.\\d+\\.[1-9]\\d*$/"
     },
     {
       "description": "Group non-major GitHub Actions updates",
