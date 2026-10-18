@@ -2,7 +2,7 @@
 
 {
   virtualisation.oci-containers.containers.satisfactory-server = {
-    image = "docker.io/wolveix/satisfactory-server:v1.9.10@sha256:e103700ae6ae4c50f19dac80eadb2a805c5b885e179ae2a40850e967bf189efd";
+    image = "docker.io/wolveix/satisfactory-server:v1.9.11@sha256:ac252dba41653eb21c6feed94b577f98fa152f5792b1aeff2ce11fe364355137";
     extraOptions = [
       "--memory=8g"
       "--memory-reservation=2g"
