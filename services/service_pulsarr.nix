@@ -12,6 +12,8 @@
       newUserDefaultRequiresApproval = "true";
       PGID = "100";
       PUID = "1000";
+    } // lib.optionalAttrs (config.virtualisation.oci-containers.containers ? apprise) {
+      appriseUrl = "https://apprise.${config.fleet.tailscale.magicDnsSuffix}";
     };
     labels = {
       "docktail.service.enable" = "true";
