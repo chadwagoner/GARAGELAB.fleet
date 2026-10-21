@@ -4,6 +4,7 @@
   imports = [
     ./service_actual-budget.nix
     ./service_adguard.nix
+    ./service_apprise.nix
     ./service_beszel-agent-intel.nix
     ./service_beszel.nix
     ./service_cleanuparr.nix
@@ -19,6 +20,7 @@
     ./service_prowlarr.nix
     ./service_pulsarr.nix
     ./service_radarr.nix
+    ./service_signal-api.nix
     ./service_sonarr.nix
     ./service_tunarr.nix
     # GAME SERVERS
