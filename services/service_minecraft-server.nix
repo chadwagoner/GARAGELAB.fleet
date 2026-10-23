@@ -2,7 +2,7 @@
 
 {
   virtualisation.oci-containers.containers.minecraft-server = {
-    image = "docker.io/itzg/minecraft-bedrock-server:2026.9.2@sha256:244e72a36a3e3d69c588cbeefe6d8f6f97c48869b801718a4023570654e3b3d9";
+    image = "docker.io/itzg/minecraft-bedrock-server:2026.10.1@sha256:6ff3abf645a88c5aafd88b7cf96d35cdfb1e0977a0c45c465a5b536cb1f1c4f9";
     environment = {
       ALLOW_CHEATS = "true";
       ALLOW_LIST = "false";
