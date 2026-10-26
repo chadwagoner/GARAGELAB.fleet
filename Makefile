@@ -58,7 +58,7 @@ nix-config-check: ## Check the local Nix installation and daemon connectivity.
 
 nix-parse: ## Parse every Nix file without evaluating the NixOS configuration.
 	@find . -type f -name '*.nix' -not -path './.git/*' \
-		-exec nix-instantiate --parse {} \; >/dev/null
+		-exec sh -c 'for file do nix-instantiate --parse "$$file" >/dev/null || exit; done' sh {} +
 	@printf 'All Nix files parsed successfully.\n'
 
 nix-show: ## Show the flake outputs without building them.
