@@ -24,16 +24,11 @@
         };
 
         modules = [
-          agenix.nixosModules.default
-          ./modules/common.nix
-          ./modules/nfs.nix
-          ./modules/podman.nix
-          ./modules/ssh.nix
-          ./modules/tailscale.nix
-          ./modules/users.nix
-          ./modules/auto-upgrade.nix
-          ./services/group_cobra.nix
-          ./modules/container-backup.nix
+          ./profiles/base.nix
+          # Keep host-only modules at the same import depth as the base modules.
+          { imports = [ ./modules/nfs.nix ./modules/container-backup.nix ]; }
+          ./profiles/container-host.nix
+          ./hosts/cobra/services.nix
           ./hosts/cobra/configuration.nix
         ];
       };
@@ -46,14 +41,9 @@
         };
 
         modules = [
-          agenix.nixosModules.default
-          ./modules/common.nix
-          ./modules/podman.nix
-          ./modules/ssh.nix
-          ./modules/tailscale.nix
-          ./modules/users.nix
-          ./modules/auto-upgrade.nix
-          ./services/group_edge-1217.nix
+          ./profiles/base.nix
+          ./profiles/container-host.nix
+          ./hosts/edge-1217/services.nix
           ./hosts/edge-1217/configuration.nix
         ];
       };
@@ -66,14 +56,9 @@
         };
 
         modules = [
-          agenix.nixosModules.default
-          ./modules/common.nix
-          ./modules/podman.nix
-          ./modules/ssh.nix
-          ./modules/tailscale.nix
-          ./modules/users.nix
-          ./modules/auto-upgrade.nix
-          ./services/group_edge-6201.nix
+          ./profiles/base.nix
+          ./profiles/container-host.nix
+          ./hosts/edge-6201/services.nix
           ./hosts/edge-6201/configuration.nix
         ];
       };
