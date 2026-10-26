@@ -2,7 +2,8 @@
 
 Declare each Podman workload in its own NixOS module in the repository's
 [`services/`](../../services/) directory, then add that module to the
-appropriate `group_<host>.nix`. Keeping the import explicit makes the
+appropriate `hosts/<host>/services.nix`. Name the module after the service,
+for example `services/adguard.nix`. Keeping the import explicit makes the
 deployment change visible in review.
 
 Use the NixOS `virtualisation.oci-containers.containers` module rather than a
