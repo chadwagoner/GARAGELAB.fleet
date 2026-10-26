@@ -1,7 +1,7 @@
 # Apprise API and Signal CLI REST API
 
-[`service_apprise.nix`](../../services/service_apprise.nix) and
-[`service_signal-api.nix`](../../services/service_signal-api.nix) run the
+[`apprise.nix`](../../services/apprise.nix) and
+[`signal-api.nix`](../../services/signal-api.nix) run the
 Apprise API and Signal CLI REST API on Cobra's `proxy` network. Docktail
 provides HTTPS on the tailnet at:
 

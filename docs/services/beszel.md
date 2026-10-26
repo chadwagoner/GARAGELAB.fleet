@@ -2,10 +2,10 @@
 
 Cobra runs both parts of Beszel:
 
-- [`service_beszel.nix`](../../services/service_beszel.nix) runs the hub on the
+- [`beszel.nix`](../../services/beszel.nix) runs the hub on the
   `proxy` Podman network and exposes it through Docktail at
   `https://beszel.unicorn-stargazer.ts.net`.
-- [`service_beszel-agent-intel.nix`](../../services/service_beszel-agent-intel.nix)
+- [`beszel-agent-intel.nix`](../../services/beszel-agent-intel.nix)
   runs the Intel GPU agent with host networking and Podman socket access.
 - [`hosts/cobra/configuration.nix`](../../hosts/cobra/configuration.nix) supplies
   the hub public key and the Agenix-managed token file.

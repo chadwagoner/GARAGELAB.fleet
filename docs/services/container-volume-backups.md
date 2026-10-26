@@ -7,7 +7,7 @@ checks repository integrity.
 
 The backup module discovers named volumes from the final
 `virtualisation.oci-containers.containers` configuration. Consequently, only
-services imported by `services/group_cobra.nix` participate. Bind mounts such
+services imported by `hosts/cobra/services.nix` participate. Bind mounts such
 as `/srv/media`, runtime secrets, and `/etc/localtime` are not container-volume
 backups. The shared `downloads` volume is explicitly excluded because it holds
 replaceable transfer data.

@@ -1,6 +1,6 @@
 # Configure and operate Pocket ID
 
-[`service_pocket-id.nix`](../../services/service_pocket-id.nix) runs Pocket ID
+[`pocket-id.nix`](../../services/pocket-id.nix) runs Pocket ID
 as the `id` Podman container on the `proxy` network. Docktail exposes it at:
 
 ```text
