@@ -22,9 +22,11 @@ backup data onto Cobra's root filesystem.
 
 Before exporting data, the job records whether each owning container service
 is running and stops it. This gives SQLite databases and multi-file application
-state a consistent point-in-time backup. Each service is restarted before the
-job moves to the next service, including when an export fails, which keeps
-downtime localized.
+state a consistent point-in-time backup. The job restarts each previously active
+service before moving to the next one and attempts recovery on failure. A
+restart can itself fail: after a failed backup, inspect the owning container
+service as well as the backup unit. Services that were already inactive are
+left inactive.
 
 The preparation unit safely creates this hierarchy after verifying the NFS
 mount:
@@ -151,17 +153,108 @@ The tar file is the decrypted volume export. Protect or remove local downloads
 when they are no longer needed; Restic encryption only protects data while it
 remains inside the repository.
 
-## Test a restore
+## Automated recovery check
 
-A successful unit is not a complete restore test. Periodically restore a
-snapshot into a newly created temporary Podman volume. First list snapshots as
-from the administrator workstation:
+CI runs the `container-backup` NixOS VM check using the generated backup script,
+real Restic, and real Podman volumes. On an `x86_64-linux` machine with KVM
+available, run it with:
 
 ```console
+nix build --no-link --print-build-logs .#checks.x86_64-linux.container-backup
+```
+
+The check restores fixture data into a fresh volume and verifies contents,
+permissions, and a symlink. It also injects stop, export, and transient restart
+failures, checks that errors propagate and previously active services recover,
+and verifies that inactive services remain inactive. It uses disposable VM
+storage and a public test password, not production volumes or credentials.
+
+The check bypasses NFS preparation and invokes the backup script as root with
+an instrumented privilege wrapper. It does not establish production NFS access,
+backup-user permissions, or application-level recoverability. Continue periodic
+restores from the actual backup repository as described below.
+
+## Test a restore
+
+Use both checks below: the CI test exercises the script in isolation; a restore
+from Cobra's repository exercises the real storage and credentials. Neither
+requires replacing a production volume. Do not inject failures on Cobra.
+
+### 1. Verify the automated test in GitHub Actions (from your Mac)
+
+1. Commit and push the changes on your working branch, including
+   `tests/container-backup.nix`. Open or update a pull request. The workflow runs
+   on pull requests and pushes to `main`, not arbitrary branch pushes alone.
+2. Open the pull request's **Checks**, then **NixOS CI** → **Discover NixOS
+   hosts** → **Test container backup and restore**.
+3. Confirm that step succeeds, not just **Evaluate flake**. The latter does not
+   execute the VM. The aggregate **NixOS configurations** check must also pass.
+4. If the VM test fails, save the step's log and fix that failure before treating
+   the automated recovery coverage as established. KVM/build-environment errors
+   are not successful backup tests.
+
+Your Apple Silicon Mac can evaluate the Linux check but cannot execute this
+KVM-based VM test locally. GitHub Actions is the recommended execution path;
+the Linux command in the preceding section is an alternative, not an additional
+required production-host operation. No deployment is needed for the CI test.
+
+### 2. Check Cobra's backup job (from your Mac)
+
+Prerequisites: SSH to `cobra` works, the backup module is already deployed, the
+NAS is available, and you have sufficient free backup and local Podman storage.
+These commands operate the currently deployed configuration, not your local
+working tree. If your SSH alias differs, append `REMOTE=user@host` to each
+`make` command, keeping `HOST=cobra`.
+
+Choose a maintenance window: running a backup briefly stops each included
+container in turn. First record the current service states:
+
+```console
+make remote-container-services
+make remote-backup-prepare
+make remote-backup
+make remote-backup-status
+make remote-container-services
+make remote-backup-check
 make remote-backup-list VOLUME=home-assistant.config
 ```
 
-Then, on Cobra, restore the selected archive into a new test volume:
+Stop on an error rather than continuing through the checklist. Expected results:
+
+- Preparation and backup commands exit successfully.
+- Backup logs show successful completion. A successful oneshot backup unit can
+  be `inactive (dead)` afterward; that alone is not a failure.
+- Containers that were running before the backup are running afterward.
+- Restic integrity checking reports no errors.
+- The volume has a snapshot. An unchanged volume may reuse an older snapshot
+  because backups use `--skip-if-unchanged`.
+
+For a direct service result and logs, run on Cobra:
+
+```console
+sudo systemctl show fleet-container-volume-backup.service -p Result -p ExecMainStatus
+sudo journalctl -u fleet-container-volume-backup.service -n 100 --no-pager
+```
+
+Expect `Result=success` and `ExecMainStatus=0` after the completed run. If backup
+or restart fails, inspect the owning service too; do not assume that backup
+failure recovery always succeeds.
+
+Optionally run `make remote-backup-check-data` from your Mac to read all stored
+data. It can generate substantial NAS traffic. Do not run
+`remote-backup-maintenance` just to test a restore: it applies retention and
+prunes data.
+
+### 3. Restore one real snapshot into a new volume (on Cobra)
+
+Connect from your Mac:
+
+```console
+ssh cobra
+bash
+```
+
+In that Bash session, list snapshots and copy the ID you intend to test:
 
 ```console
 sudo -u nix restic \
@@ -170,21 +263,66 @@ sudo -u nix restic \
   snapshots --tag volume:home-assistant.config
 ```
 
-Create an empty test volume, then import the selected snapshot's tar stream:
+Replace `PASTE_SNAPSHOT_ID` below with that ID. Keep this shell open until
+cleanup so the test-volume variable remains available. The block refuses to
+reuse an existing volume and stops if either side of the restore pipeline fails:
 
 ```console
-sudo podman volume create restore-test-home-assistant
+set -euo pipefail
+SNAPSHOT_ID=PASTE_SNAPSHOT_ID
+test "$SNAPSHOT_ID" != PASTE_SNAPSHOT_ID
+TEST_VOLUME="restore-test-home-assistant-$(date -u +%Y%m%dT%H%M%SZ)"
+if sudo podman volume exists "$TEST_VOLUME"; then
+  printf 'Refusing to reuse existing volume: %s\n' "$TEST_VOLUME" >&2
+  exit 1
+fi
+sudo podman volume create "$TEST_VOLUME"
 sudo -u nix restic \
   --repo /srv/backup/cobra/restic \
   --password-file /run/agenix/cobra-container-backup-restic-password \
-  dump SNAPSHOT_ID home-assistant.config.tar | \
-  sudo podman volume import restore-test-home-assistant -
+  dump --tag volume:home-assistant.config "$SNAPSHOT_ID" home-assistant.config.tar | \
+  sudo podman volume import "$TEST_VOLUME" -
+RESTORED_PATH=$(sudo podman volume inspect "$TEST_VOLUME" --format '{{.Mountpoint}}')
+sudo test -s "$RESTORED_PATH/configuration.yaml"
+sudo stat "$RESTORED_PATH/configuration.yaml"
+sudo find "$RESTORED_PATH" -maxdepth 1 -mindepth 1 -printf '%f\n'
+printf 'Restored snapshot %s into %s\n' "$SNAPSHOT_ID" "$TEST_VOLUME"
 ```
 
-Inspect the restored volume before removing that specifically named test
-volume. Restoring over a production volume requires a separate maintenance
-window, a stopped owning container, and an empty replacement volume because
-`podman volume import` merges archive contents into an existing volume.
+Success means the import exits zero, `configuration.yaml` exists and is
+nonempty, and the file listing contains the expected configuration for the
+chosen snapshot. Inspect additional known files as needed without posting
+configuration contents or credentials in logs. This proves archive retrieval
+and import, not that Home Assistant can start or every database is healthy.
+Application startup testing needs a separate isolated environment; do not
+attach this restored volume to the running production container.
+
+### 4. Clean up and record the outcome
+
+In the same Cobra shell, remove only the test volume created above:
+
+```console
+case "$TEST_VOLUME" in
+  restore-test-home-assistant-*) sudo podman volume rm "$TEST_VOLUME" ;;
+  *) printf 'Unexpected test-volume name; refusing cleanup\n' >&2; exit 1 ;;
+esac
+```
+
+If a step failed and the Bash session exited, the temporary volume may remain.
+List candidates with `sudo podman volume ls --filter name=restore-test-home-assistant-`,
+verify the exact name from your test output, and remove only that volume. Never
+use a blanket volume-prune command for cleanup. Restored volumes contain
+decrypted application data and should not be left behind unnecessarily.
+
+Record the date, CI run/commit, selected snapshot ID, backup service result,
+Restic check result, restored-file checks, and cleanup result. Repeat periodically
+and after backup-script, storage, or credential changes. Do not rotate the Restic
+password as part of this exercise.
+
+Restoring over a production volume is deliberately outside this checklist. It
+requires a separate maintenance window, a stopped owning container, and an
+empty replacement volume because `podman volume import` merges archive contents
+into an existing volume.
 
 ## Add or exclude a volume
 
