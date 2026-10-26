@@ -5,6 +5,7 @@
     image = "docker.io/caronc/apprise:2.0.1@sha256:0b2913b15c8eb47c25345722985ffbfae701326edde21909c205d296d62dd52c";
     environment = {
       APPRISE_STATEFUL_MODE = "simple";
+      APPRISE_WORKER_COUNT = "4";
     };
     labels = {
       "docktail.service.enable" = "true";
