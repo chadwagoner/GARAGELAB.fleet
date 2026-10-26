@@ -44,8 +44,13 @@ checked-in configuration:
 - [`hosts/cobra/hardware-configuration.nix`](../hosts/cobra/hardware-configuration.nix)
   contains the root and boot filesystem UUIDs.
 - [`hosts/cobra/configuration.nix`](../hosts/cobra/configuration.nix) uses
-  interface `enp86s0`, address `192.168.128.3/24`, gateway
-  `192.168.128.1`, and DNS server `192.168.128.1`.
+  Ethernet interface `enp86s0` as a member of bridge `br0`. The bridge holds
+  address `192.168.128.3/24`, with gateway and DNS server `192.168.128.1`.
+  NixOS manages both interfaces directly; NetworkManager leaves them unmanaged.
+
+Future VM network interfaces can attach to `br0` to obtain their own LAN IPs
+from the router's DHCP server. This requires the switch port to permit multiple
+MAC addresses; no NAT or physical NIC passthrough is needed.
 
 A reinstall commonly changes filesystem UUIDs. A hardware or cabling change
 can also change the interface name. Correct those values before activation or
@@ -165,6 +170,23 @@ sudo test -s /run/agenix/cobra-beszel-agent
 ```
 
 `test -s` verifies that a runtime file exists without printing its secret.
+
+When activating the Ethernet-to-bridge migration, use the local console:
+SSH and Tailscale may disconnect while the address moves. Verify that `br0`
+holds `192.168.128.3/24`, `enp86s0` is its bridge member without that address,
+and the default route uses `br0`:
+
+```console
+ip -brief address show br0
+ip -brief address show enp86s0
+bridge link show
+ip route show default
+ping -c 3 192.168.128.1
+```
+
+Also confirm SSH access from another machine before making the test generation
+persistent. VM DHCP and LAN connectivity must be tested separately once a VM
+is attached to the bridge.
 
 ## 7. Make the configuration persistent
 
