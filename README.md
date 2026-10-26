@@ -7,6 +7,20 @@ Step-by-step host bootstrap, secret rotation, and service runbooks are in
 For backup validation, follow the [step-by-step CI and Cobra restore
 checklist](docs/services/container-volume-backups.md#test-a-restore).
 
+## Repository layout
+
+- `hosts/<host>/`: machine configuration, hardware configuration, and explicit
+  service selection in `services.nix`.
+- `profiles/`: shared fleet baseline and container-host module bundles.
+- `modules/`: reusable infrastructure modules.
+- `services/`: application modules, named after each service without prefixes.
+- `secrets/`: encrypted secrets and recipient configuration.
+- `tests/`: configuration checks and integration tests.
+- `docs/`: bootstrap guides and operational runbooks.
+
+`flake.nix` declares the hosts and composes their profiles and host-specific
+modules. Service imports remain explicit so deployments are visible in review.
+
 ## Commands
 
 Run `make` to list the available repository tasks. Common workflows include:
