@@ -4,6 +4,9 @@ Step-by-step host bootstrap, secret rotation, and service runbooks are in
 [`docs/`](docs/README.md). Start with the
 [Cobra bootstrap guide](docs/cobra-bootstrap.md).
 
+For backup validation, follow the [step-by-step CI and Cobra restore
+checklist](docs/services/container-volume-backups.md#test-a-restore).
+
 ## Commands
 
 Run `make` to list the available repository tasks. Common workflows include:
