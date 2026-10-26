@@ -19,7 +19,7 @@ jobs:
   discover-hosts:
     name: Discover NixOS hosts
     runs-on: ubuntu-26.04
-    timeout-minutes: 10
+    timeout-minutes: 30
     outputs:
       hosts: ${{ steps.hosts.outputs.hosts }}
 
@@ -34,6 +34,9 @@ jobs:
         with:
           extra_nix_config: |
             experimental-features = nix-command flakes
+
+      - name: Test Makefile parse failure handling
+        run: sh tests/nix-parse.sh
 
       - name: Evaluate flake
         run: nix flake check --no-build --show-trace
@@ -50,6 +53,9 @@ jobs:
           fi
 
           echo "hosts=$hosts" >> "$GITHUB_OUTPUT"
+
+      - name: Test container backup and restore
+        run: nix build --no-link --print-build-logs --show-trace .#checks.x86_64-linux.container-backup
 
   build-hosts:
     name: Build NixOS host / ${{ matrix.host }}
