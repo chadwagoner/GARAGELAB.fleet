@@ -12,6 +12,10 @@
 
   outputs = inputs@{ self, nixpkgs, agenix, ... }:
     {
+      checks.x86_64-linux.container-backup = import ./tests/container-backup.nix {
+        pkgs = nixpkgs.legacyPackages.x86_64-linux;
+      };
+
       nixosConfigurations.cobra = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
 
