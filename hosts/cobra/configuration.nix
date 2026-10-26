@@ -33,6 +33,8 @@
   # NETWORK
   # ------------------------------------------------------------
   networking.networkmanager.enable = true;
+  # Native NixOS networking owns the LAN bridge and its physical member.
+  networking.networkmanager.unmanaged = [ "interface-name:br0" "interface-name:enp86s0" ];
 
   # ------------------------------------------------------------
   # HOME ASSISTANT MOSQUITTO
@@ -63,7 +65,8 @@
   # };
 
   networking.useDHCP = false;
-  networking.interfaces.enp86s0.ipv4.addresses = [{
+  networking.bridges.br0.interfaces = [ "enp86s0" ];
+  networking.interfaces.br0.ipv4.addresses = [{
     address = "192.168.128.3";
     prefixLength = 24;
   }];
@@ -71,8 +74,8 @@
   networking.defaultGateway = "192.168.128.1";
   networking.nameservers = [ "192.168.128.1" ];
 
-  boot.kernel.sysctl."net.ipv6.conf.enp86s0.accept_ra" = 2;
-  boot.kernel.sysctl."net.ipv6.conf.enp86s0.accept_ra_rt_info_max_plen" = 64;
+  boot.kernel.sysctl."net.ipv6.conf.br0.accept_ra" = 2;
+  boot.kernel.sysctl."net.ipv6.conf.br0.accept_ra_rt_info_max_plen" = 64;
 
   # ------------------------------------------------------------
   # TAILSCALE
@@ -174,7 +177,7 @@
     "docktail.service.service-protocol" = "https";
   };
 
-  networking.firewall.interfaces.enp86s0 = {
+  networking.firewall.interfaces.br0 = {
     allowedTCPPorts = [
       1400 # Sonos event callbacks
       8123 # Home Assistant web UI and API
