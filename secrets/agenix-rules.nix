@@ -8,6 +8,11 @@ in {
   # ------------------------------------------------------------
   # HOST SPECIFIC
   # ------------------------------------------------------------
+  "edge-6201-fastmail-meeting-nudger-env.age".publicKeys = [
+    admin
+    edge-6201
+  ];
+
   "cobra-beszel-agent.age".publicKeys = [
     admin
     cobra
@@ -31,6 +36,11 @@ in {
   # ------------------------------------------------------------
   # GENERAL
   # ------------------------------------------------------------
+  "github-pat.age".publicKeys = [
+    admin
+    edge-6201
+  ];
+
   "beszel-agent.age".publicKeys = [
     admin
     cobra
