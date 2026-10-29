@@ -1,7 +1,7 @@
 # Manage and rotate Agenix secrets
 
 This repository stores encrypted Agenix payloads in [`secrets/`](../secrets/).
-The recipient policy in [`secrets/secrets.nix`](../secrets/secrets.nix) grants
+The recipient policy in [`secrets/agenix-rules.nix`](../secrets/agenix-rules.nix) grants
 decryption to the public identities assigned to each file:
 
 - `admin`: the administrator/recovery SSH key used to edit or rekey secrets
@@ -27,7 +27,7 @@ Confirm which public key a private identity produces before editing:
 ssh-keygen -y -f ~/.ssh/id_ed25519
 ```
 
-Compare it with the `admin` value in `secrets/secrets.nix`. If the matching
+Compare it with the `admin` value in `secrets/agenix-rules.nix`. If the matching
 private key is elsewhere, pass that path explicitly to Agenix rather than
 changing the recipient policy casually.
 
@@ -102,7 +102,7 @@ a reinstall or intentional SSH host-key rotation changes a host's
    ```
 
 2. On the administrator workstation, update the intended `publicKeys` entries
-   in `secrets/secrets.nix`. Keep the verified `admin` recovery recipient.
+   in `secrets/agenix-rules.nix`. Keep the verified `admin` recovery recipient.
 
 3. From the repository root, re-encrypt every managed payload for the current
    recipient policy. If Agenix can discover the administrator identity through
@@ -142,7 +142,7 @@ a reinstall or intentional SSH host-key rotation changes a host's
    make nix-check
    ```
 
-5. Commit and push `secrets/secrets.nix` and every changed `.age` file. The
+5. Commit and push `secrets/agenix-rules.nix` and every changed `.age` file. The
    GitHub-based deployment cannot see local-only ciphertext.
 
 6. Build or test the pushed branch on each affected host. Activation should
@@ -155,7 +155,7 @@ cannot be recovered; issue new upstream credentials instead.
 
 ## Add a new secret
 
-1. Add the new filename and intended public recipients to `secrets/secrets.nix`.
+1. Add the new filename and intended public recipients to `secrets/agenix-rules.nix`.
 2. Create it with `make agenix-edit AGE_FILE=<name>.age`.
 3. Declare `age.secrets.<name>` in the host or service module.
 4. Pass `config.age.secrets.<name>.path` to the consumer as a runtime file.

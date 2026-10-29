@@ -84,7 +84,7 @@ sudo systemctl restart sshd.service
 ```
 
 Confirm that the public key equals the `cobra` recipient in
-[`secrets/secrets.nix`](../secrets/secrets.nix):
+[`secrets/agenix-rules.nix`](../secrets/agenix-rules.nix):
 
 ```console
 sudo cat /etc/ssh/ssh_host_ed25519_key.pub
