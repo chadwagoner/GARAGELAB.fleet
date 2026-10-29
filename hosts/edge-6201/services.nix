@@ -7,4 +7,6 @@
     ../../services/home-assistant.nix
     ../../services/home-assistant-matter.nix
   ];
+
+  fleet.service.fastmail-meeting-nudger.enable = true;
 }
