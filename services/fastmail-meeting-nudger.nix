@@ -24,7 +24,7 @@ in
     };
 
     systemd.tmpfiles.rules = [
-      "d /var/lib/fastmail-meeting-nudger 0750 root root -"
+      "d /var/lib/fastmail-meeting-nudger 0750 10001 10001 -"
     ];
 
     virtualisation.oci-containers.containers.fastmail-meeting-nudger = {
