@@ -59,11 +59,21 @@
       "separateMajorMinor": false
     },
     {
-      "description": "Keep Pulsarr on 0.x release tags with a nonzero patch until upstream publishes an official 1.x release",
+      "description": "Allow Pulsarr 0.x and 1.x release tags with a nonzero patch",
       "matchDepNames": [
         "docker.io/lakker/pulsarr"
       ],
-      "allowedVersions": "/^0\\.\\d+\\.[1-9]\\d*$/"
+      "allowedVersions": "/^v?[01]\\.\\d+\\.[1-9]\\d*$/"
+    },
+    {
+      "description": "Manually update the private Fastmail meeting nudger image",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "ghcr.io/chadwagoner/fastmail-meeting-nudger"
+      ],
+      "enabled": false
     },
     {
       "description": "Group non-major GitHub Actions updates",
