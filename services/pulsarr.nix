@@ -2,7 +2,7 @@
 
 {
   virtualisation.oci-containers.containers.pulsarr = {
-    image = "docker.io/lakker/pulsarr:0.19.7@sha256:3032ba2bd4ed26e06ce812c896a599febcd8843f64a31b1d9d63c99fb46c130b";
+    image = "docker.io/lakker/pulsarr:1.0.3";
     environment = {
       baseUrl = "http://pulsarr.${config.fleet.tailscale.magicDnsSuffix}";
       port = "3003";
