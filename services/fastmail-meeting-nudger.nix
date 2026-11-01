@@ -44,8 +44,8 @@ in
         CALDAV_URL = "https://caldav.fastmail.com/dav/";
         SMTP_HOST = "smtp.fastmail.com";
         SMTP_PORT = "465";
-        DRY_RUN = "true";
-        REMINDER_INCLUDE_ICS = "false";
+        DRY_RUN = "false";
+        REMINDER_INCLUDE_ICS = "true";
         TZ = "UTC";
         SCHEDULE_TIME = "11:00";
         HISTORY_RETENTION_DAYS = "30";
