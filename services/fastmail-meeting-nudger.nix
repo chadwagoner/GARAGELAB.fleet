@@ -28,7 +28,7 @@ in
     ];
 
     virtualisation.oci-containers.containers.fastmail-meeting-nudger = {
-      image = "ghcr.io/chadwagoner/fastmail-meeting-nudger:2026.10.11";
+      image = "ghcr.io/chadwagoner/fastmail-meeting-nudger:2026.11.2";
       login = {
         registry = "ghcr.io";
         username = "chadwagoner";
@@ -47,6 +47,7 @@ in
         DRY_RUN = "false";
         REMINDER_INCLUDE_ICS = "true";
         TZ = "UTC";
+        DISPLAY_TIMEZONE = "America/New_York";
         SCHEDULE_TIME = "11:00";
         HISTORY_RETENTION_DAYS = "30";
         DATABASE_PATH = "/data/nudger.sqlite3";
