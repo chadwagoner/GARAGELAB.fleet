@@ -1,9 +1,12 @@
-{ lib, ... }:
+{ config, lib, ... }:
 
 {
   virtualisation.oci-containers.containers.cookcli = {
     image = "ghcr.io/cooklang/cookcli:0.40.0@sha256:b3721b7bdf37d0d26c081be3b92c97700ff9fe29229ffd37ac79fa685122eb11";
-    environment.COOK_CONFIG_DIR = "/config";
+    environment = {
+      COOK_CONFIG_DIR = "/config";
+      COOK_CORS_ORIGIN = "https://cook.${config.fleet.tailscale.magicDnsSuffix},http://cook.${config.fleet.tailscale.magicDnsSuffix}";
+    };
     labels = {
       "docktail.service.enable" = "true";
       "docktail.service.name" = "cook";
