@@ -8,6 +8,7 @@
     ../../services/beszel-agent-intel.nix
     ../../services/beszel.nix
     ../../services/cleanuparr.nix
+    ../../services/cookcli.nix
     ../../services/docktail.nix
     ../../services/homarr.nix
     ../../services/home-assistant.nix
