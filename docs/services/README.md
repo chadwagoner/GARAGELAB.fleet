@@ -12,6 +12,7 @@ sends logs to journald, and starts the container at boot by default.
 
 ## Service guides
 
+- [LAN-first DNS, reverse proxy, and authentication proposal](local-ingress-proposal.md)
 - [Apprise API and Signal CLI REST API](apprise-signal.md)
 - [Beszel](beszel.md)
 - [Container-volume backups](container-volume-backups.md)
