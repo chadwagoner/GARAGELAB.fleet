@@ -15,6 +15,7 @@ in
     autoPrune = {
       enable = true;
       dates = "weekly";
+      flags = [ "--all" ];
     };
 
     defaultNetwork.settings.dns_enabled = true;
