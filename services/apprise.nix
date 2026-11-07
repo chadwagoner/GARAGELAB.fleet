@@ -2,7 +2,7 @@
 
 {
   virtualisation.oci-containers.containers.apprise = {
-    image = "docker.io/caronc/apprise:2.0.1@sha256:0b2913b15c8eb47c25345722985ffbfae701326edde21909c205d296d62dd52c";
+    image = "docker.io/caronc/apprise:2.0.2@sha256:6ae97e24b3447f85f725a03ba73c6dc3a5f4b99f4273ac126de2d9b5ed6205d5";
     environment = {
       APPRISE_STATEFUL_MODE = "simple";
       APPRISE_WORKER_COUNT = "4";
