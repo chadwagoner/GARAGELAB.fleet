@@ -2,7 +2,7 @@
 
 {
   virtualisation.oci-containers.containers.cookcli = {
-    image = "ghcr.io/cooklang/cookcli:0.40.0@sha256:b3721b7bdf37d0d26c081be3b92c97700ff9fe29229ffd37ac79fa685122eb11";
+    image = "ghcr.io/cooklang/cookcli:0.41.1@sha256:c6bed1fae7ff3351e2bdea26efa953dc239964d72869cfb7fb367c3a93e48cf9";
     environment = {
       COOK_CONFIG_DIR = "/config";
       COOK_CORS_ORIGIN = "https://cook.${config.fleet.tailscale.magicDnsSuffix},http://cook.${config.fleet.tailscale.magicDnsSuffix}";
