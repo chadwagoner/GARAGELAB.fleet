@@ -2,7 +2,7 @@
 
 {
   virtualisation.oci-containers.containers.plex = {
-    image = "ghcr.io/linuxserver/plex:1.43.5@sha256:01a53d9c7adcbb3701fbb0a4230c0a37c85453759b6b05a67356c3c7a09de08d";
+    image = "ghcr.io/linuxserver/plex:1.43.5@sha256:d6e045dac4ea2ccb94e0aa4441e02dbec9c9d306d650814eb33d20ad497a2107";
     networks = [ "host" ];
     devices = [ "/dev/dri:/dev/dri" ];
     environment = {
