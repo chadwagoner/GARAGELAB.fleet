@@ -63,6 +63,12 @@ with the same `HOST`/`REMOTE`. Completion is `active (exited)` with a successful
 exit status of zero. Use `make remote-activation-logs` to follow its journal;
 Ctrl-C only stops the log viewer.
 
+`remote-activation-status` also reports whether a reboot is required by comparing
+the booted kernel, kernel modules, and initrd against the installed system profile.
+It lists changed boot components and still reports reboot status if the activation
+unit has been cleared. Missing boot information is reported as unknown. This check
+does not reboot the host or detect every application-specific restart requirement.
+
 The retained `fleet-remote-activation.service` prevents overlapping activations.
 After inspecting a completed result, run `make remote-activation-clear` with the
 same `HOST`/`REMOTE` before the next activation. This clears completed or failed
