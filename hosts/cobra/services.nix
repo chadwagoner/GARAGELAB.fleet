@@ -24,7 +24,7 @@
     ../../services/radarr.nix
     ../../services/signal-api.nix
     ../../services/sonarr.nix
-    ../../services/tunarr.nix
+    # ../../services/tunarr.nix
     # GAME SERVERS
     ../../services/minecraft-server.nix
   ];
