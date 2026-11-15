@@ -114,8 +114,8 @@ remote-test: ## Queue a detached temporary activation; check remote-activation-s
 remote-switch: ## Queue a detached persistent activation; check remote-activation-status afterwards.
 	@sh scripts/remote-activation.sh switch $(call shell_quote,$(REMOTE)) $(call shell_quote,$(REMOTE_FLAKE)#$(HOST)) $(REMOTE_TTY)
 
-remote-activation-status: ## Inspect activation state and exit status (active/exited + success + 0 means complete).
-	@ssh "$(REMOTE)" sudo systemctl status fleet-remote-activation.service --no-pager
+remote-activation-status: ## Inspect activation result and booted versus installed reboot requirements.
+	@sh scripts/remote-activation.sh status $(call shell_quote,$(REMOTE)) '' $(REMOTE_TTY)
 
 remote-activation-logs: ## Follow only the detached activation's journal (Ctrl-C does not stop it).
 	@ssh "$(REMOTE)" sudo journalctl -u fleet-remote-activation.service -f
