@@ -28,7 +28,7 @@ in
     ];
 
     virtualisation.oci-containers.containers.fastmail-meeting-nudger = {
-      image = "ghcr.io/chadwagoner/fastmail-meeting-nudger:2026.11.2";
+      image = "ghcr.io/chadwagoner/fastmail-meeting-nudger:2026.11.4";
       login = {
         registry = "ghcr.io";
         username = "chadwagoner";
