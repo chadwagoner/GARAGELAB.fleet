@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 let
   cfg = config.fleet.service.beszel-agent-intel;
@@ -62,6 +62,25 @@ in
         "tailscaled-set.service"
       ];
       requires = [ "podman.socket" ];
+      preStart = lib.mkBefore ''
+        # Keep DNS readiness ahead of the generated Podman setup.
+        beszel_dns_ready=false
+        for attempt in {1..30}; do
+          if ${pkgs.coreutils}/bin/timeout --kill-after=1s 2s \
+            ${pkgs.glibc.bin}/bin/getent ahosts \
+            ${lib.escapeShellArg "beszel.${config.fleet.tailscale.magicDnsSuffix}"} >/dev/null; then
+            beszel_dns_ready=true
+            break
+          fi
+          if [ "$attempt" -lt 30 ]; then
+            ${pkgs.coreutils}/bin/sleep 2
+          fi
+        done
+        if [ "$beszel_dns_ready" != true ]; then
+          echo "Beszel DNS readiness failed after 30 attempts: beszel.${config.fleet.tailscale.magicDnsSuffix}" >&2
+          exit 1
+        fi
+      '';
       serviceConfig.Restart = lib.mkForce "always";
     };
   };
