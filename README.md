@@ -56,8 +56,22 @@ Remote targets use the repository's default GitHub branch unless
 `REMOTE_FLAKE=github:chadwagoner/GARAGELAB.fleet/my-branch`.
 
 `remote-test` activates the result until reboot; `remote-switch` makes it the
-boot default. Use `make remote-status` to show failed units and recent boot
-errors after activation. Use `make remote-auto-upgrade-status` to show the
+boot default. Both queue a detached system service, so activation continues if
+SSH disconnects during network or Tailscale restarts. A successful launch is
+not a successful deployment: reconnect and run `make remote-activation-status`
+with the same `HOST`/`REMOTE`. Completion is `active (exited)` with a successful
+exit status of zero. Use `make remote-activation-logs` to follow its journal;
+Ctrl-C only stops the log viewer.
+
+The retained `fleet-remote-activation.service` prevents overlapping activations.
+After inspecting a completed result, run `make remote-activation-clear` with the
+same `HOST`/`REMOTE` before the next activation. This clears completed or failed
+results, refuses running or queued activations, and is harmless if no unit exists.
+Results remain available until the unit is cleared or the host reboots; the
+journal is separate.
+
+Use `make remote-status` to show failed units and recent boot errors after
+activation. Use `make remote-auto-upgrade-status` to show the
 automatic-upgrade timer, last service result, and logs from the previous eight
 days. Override the log window with, for example,
 `AUTO_UPGRADE_SINCE="30 days ago"`.
