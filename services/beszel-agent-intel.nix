@@ -67,7 +67,7 @@ in
         beszel_dns_ready=false
         for attempt in {1..30}; do
           if ${pkgs.coreutils}/bin/timeout --kill-after=1s 2s \
-            ${pkgs.glibc.bin}/bin/getent ahosts \
+            ${pkgs.getent}/bin/getent ahosts \
             ${lib.escapeShellArg "beszel.${config.fleet.tailscale.magicDnsSuffix}"} >/dev/null; then
             beszel_dns_ready=true
             break
