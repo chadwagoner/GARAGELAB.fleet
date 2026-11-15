@@ -6,6 +6,9 @@ remote=$2
 flake=$3
 shift 3
 case "$action" in
+	status)
+		exec ssh "$@" "$remote" 'sh -s' < "$(dirname "$0")/remote-activation-status.sh"
+		;;
 	clear)
 		exec ssh "$@" "$remote" 'sh -s' < "$(dirname "$0")/remote-activation-clear.sh"
 		;;
