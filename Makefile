@@ -7,6 +7,8 @@ REMOTE ?= $(HOST)
 REMOTE_TTY ?=
 FLAKE ?= .
 REMOTE_FLAKE ?= github:chadwagoner/GARAGELAB.fleet
+# Quote one argument for the local shell; the helper separately quotes SSH's command.
+shell_quote = '$(subst ','"'"',$(1))'
 NIX ?= nix
 NIX_FLAGS ?= --extra-experimental-features "nix-command flakes"
 AGENIX_FLAKE ?= github:ryantm/agenix
@@ -23,7 +25,7 @@ export XDG_CACHE_HOME
 .PHONY: help \
 	git-cleanup-preview git-cleanup git-pr-create \
 	nix-info nix-config-check nix-parse nix-show nix-eval nix-check nix-update agenix-edit agenix-rekey \
-	remote-build remote-dry-activate remote-test remote-switch remote-status remote-auto-upgrade-status \
+	remote-build remote-dry-activate remote-test remote-switch remote-activation-status remote-activation-logs remote-activation-clear remote-status remote-auto-upgrade-status \
 	remote-container-services remote-containers \
 	remote-backup-prepare remote-backup remote-backup-status remote-backup-list \
 	remote-backup-files remote-backup-download remote-backup-check \
@@ -106,13 +108,20 @@ remote-dry-activate: ## Show what activation would change on the NixOS host.
 	@ssh "$(REMOTE)" sudo nixos-rebuild dry-activate \
 		--flake "$(REMOTE_FLAKE)#$(HOST)" --refresh
 
-remote-test: ## Build and temporarily activate the configuration on the NixOS host.
-	@ssh $(REMOTE_TTY) "$(REMOTE)" sudo nixos-rebuild test \
-		--flake "$(REMOTE_FLAKE)#$(HOST)" --refresh
+remote-test: ## Queue a detached temporary activation; check remote-activation-status afterwards.
+	@sh scripts/remote-activation.sh test $(call shell_quote,$(REMOTE)) $(call shell_quote,$(REMOTE_FLAKE)#$(HOST)) $(REMOTE_TTY)
 
-remote-switch: ## Build and persistently activate the configuration on the NixOS host.
-	@ssh $(REMOTE_TTY) "$(REMOTE)" sudo nixos-rebuild switch \
-		--flake "$(REMOTE_FLAKE)#$(HOST)" --refresh
+remote-switch: ## Queue a detached persistent activation; check remote-activation-status afterwards.
+	@sh scripts/remote-activation.sh switch $(call shell_quote,$(REMOTE)) $(call shell_quote,$(REMOTE_FLAKE)#$(HOST)) $(REMOTE_TTY)
+
+remote-activation-status: ## Inspect activation state and exit status (active/exited + success + 0 means complete).
+	@ssh "$(REMOTE)" sudo systemctl status fleet-remote-activation.service --no-pager
+
+remote-activation-logs: ## Follow only the detached activation's journal (Ctrl-C does not stop it).
+	@ssh "$(REMOTE)" sudo journalctl -u fleet-remote-activation.service -f
+
+remote-activation-clear: ## Clear a completed/failed activation; refuse running or queued work.
+	@sh scripts/remote-activation.sh clear $(call shell_quote,$(REMOTE)) '' $(REMOTE_TTY)
 
 remote-status: ## Show failed systemd units and recent boot errors on the NixOS host.
 	@ssh "$(REMOTE)" 'systemctl --failed; journalctl -b -p err..alert --no-pager -n 50'
