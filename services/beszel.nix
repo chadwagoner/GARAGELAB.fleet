@@ -2,7 +2,7 @@
 
 {
   virtualisation.oci-containers.containers.beszel = {
-    image = "docker.io/henrygd/beszel:0.21.1@sha256:8514a69d9bbbcb74f371a3205561ee231fc0289739cea64e8131f341d695b770";
+    image = "docker.io/henrygd/beszel:0.21.2@sha256:b0be90bd4aee2993fde763032a5098ce4386fba43cfe5031ec017b8d9e8c97a2";
     environment = {
       APP_URL = "https://beszel.${config.fleet.tailscale.magicDnsSuffix}";
     };
