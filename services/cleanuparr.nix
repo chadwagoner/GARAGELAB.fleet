@@ -2,7 +2,7 @@
 
 {
   virtualisation.oci-containers.containers.cleanuparr = {
-    image = "ghcr.io/cleanuparr/cleanuparr:2.11.1@sha256:923c2fe435e22fc58d261bacd2d6bbd8eb1ba3f95358803a8e4d3287ffd919d3";
+    image = "ghcr.io/cleanuparr/cleanuparr:2.11.2@sha256:4093c0eb48c1926ef375e672f05ea804aacbe7d0900d203cc8716880ccf5a1df";
     environment = {
       PORT = "11011";
       # BASE_PATH = "/cleanuparr";
