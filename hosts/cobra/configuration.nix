@@ -182,6 +182,12 @@
       1400 # Sonos event callbacks
       8123 # Home Assistant web UI and API
     ];
+    allowedTCPPortRanges = [
+      {
+        from = 21063;
+        to = 21099;
+      } # HomeKit bridge and standalone accessories
+    ];
     allowedUDPPorts = [
       1900 # SSDP/UPnP discovery
       5353 # mDNS/Zeroconf discovery
