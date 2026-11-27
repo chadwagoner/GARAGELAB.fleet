@@ -2,7 +2,7 @@
 
 {
   virtualisation.oci-containers.containers.home-assistant-matter = {
-    image = "ghcr.io/matter-js/matterjs-server:1.5.5@sha256:ee149c7c67eff0e90f131e8f0d628f7b099591ec58473c8cda1209e8ae4df66e";
+    image = "ghcr.io/matter-js/matterjs-server:1.6.1@sha256:5591f9f65926ca4b13b34cfd9c9888cb9d9ee9f147fe0b04c8e025cbeeee0eb7";
     networks = [ "host" ];
     volumes = [
       "/run/dbus:/run/dbus:ro"
